@@ -67,6 +67,11 @@ use App\Filters\PostFilter;
 
 class PostController extends Controller
 {
+	/**
+     * Display a listing of the resource.
+     *
+     * @return \Illuminate\Http\Response
+     */
 	public function index(PostFilter $filters)
 	{
 		$posts = Post::filter($filters);
@@ -105,7 +110,7 @@ class PostFilter extends AbstractQueryFilter
     protected $searchableColumns = [
     	'subject',
     	'body',
-    	'comments'	=>	['body'],
+    	'comments' => ['body'],
     ];
 }
 ```
