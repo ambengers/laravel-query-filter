@@ -27,7 +27,7 @@ Optionally, you can publish the config file by running the following command.
 ``` bash
 php artisan vendor:publish --tag=query_filter
 ```
-The config file contains the configuration for the namespace and path of the filter classes.
+The config file contains the configuration for the namespace and path of the filter classes. The default namespace is `App\Filters` and default path is '`app/Filters`.
 
 ## Usage
 Make your model use the `QueryFilterable` trait
@@ -36,7 +36,7 @@ use Ambengers\QueryFilter\QueryFilterable;
 
 class Post extends Model
 {
-  use QueryFilterable;
+    use QueryFilterable;
 }
 ```
 
@@ -45,19 +45,21 @@ Then you can make a filter class using the `make:query-filter` command.
 php artisan make:query-filter PostFilter
 ```
 
-In this filter class, you can also define your own custom filters. For example, lets add a filter for `/posts?published` to get only the published posts:
+In the filter class, you can also define your own custom filters. For example, lets add a filter for `/posts?published` to get only the published posts:
 ``` php
+use Ambengers\QueryFilter\AbstractQueryFilter;
+
 class PostFilter extends AbstractQueryFilter
 {
-  /**
-   * Filter the post to get the published ones
-   *
-   * @return Illuminate\Database\Eloquent\Builder
-   */
-  public function published()
-  {
-	return $this->builder->whereNotNull('published_at');
-  }
+    /**
+     * Filter the post to get the published ones
+     *
+     * @return Illuminate\Database\Eloquent\Builder
+     */
+    public function published()
+    {
+	      return $this->builder->whereNotNull('published_at');
+    }
 }
 ```
 
@@ -67,17 +69,17 @@ use App\Filters\PostFilter;
 
 class PostController extends Controller
 {
-  /**
-   * Display a listing of the resource.
-   *
-   * @return \Illuminate\Http\Response
-   */
-  public function index(PostFilter $filters)
-  {
-	$posts = Post::filter($filters);
+    /**
+     * Display a listing of the resource.
+     *
+     * @return \Illuminate\Http\Response
+     */
+    public function index(PostFilter $filters)
+    {
+	      $posts = Post::filter($filters);
 
-	return PostResource::collection($posts);
-  }
+	      return PostResource::collection($posts);
+    }
 }
 ```
 
@@ -108,9 +110,9 @@ class PostFilter extends AbstractQueryFilter
    * @var array
    */
   protected $searchableColumns = [
-	'subject',
-	'body',
-	'comments' => ['body'],
+	  'subject',
+	  'body',
+	  'comments' => ['body'],
   ];
 }
 ```
