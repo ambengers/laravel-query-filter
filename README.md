@@ -51,15 +51,15 @@ use Ambengers\QueryFilter\AbstractQueryFilter;
 
 class PostFilter extends AbstractQueryFilter
 {
-    /**
-     * Filter the post to get the published ones
-     *
-     * @return Illuminate\Database\Eloquent\Builder
-     */
-    public function published()
-    {
-      return $this->builder->whereNotNull('published_at');
-    }
+  /**
+   * Filter the post to get the published ones
+   *
+   * @return Illuminate\Database\Eloquent\Builder
+   */
+  public function published()
+  {
+    return $this->builder->whereNotNull('published_at');
+  }
 }
 ```
 
@@ -69,17 +69,17 @@ use App\Filters\PostFilter;
 
 class PostController extends Controller
 {
-    /**
-     * Display a listing of the resource.
-     *
-     * @return \Illuminate\Http\Response
-     */
-    public function index(PostFilter $filters)
-    {
-      $posts = Post::filter($filters);
+  /**
+   * Display a listing of the resource.
+   *
+   * @return \Illuminate\Http\Response
+   */
+  public function index(PostFilter $filters)
+  {
+    $posts = Post::filter($filters);
 
-      return PostResource::collection($posts);
-    }
+    return PostResource::collection($posts);
+  }
 }
 ```
 
