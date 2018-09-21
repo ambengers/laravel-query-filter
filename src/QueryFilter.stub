@@ -1,0 +1,17 @@
+<?php
+
+namespace DummyNamespace;
+
+use Ambengers\QueryFilter\AbstractQueryFilter;
+
+class DummyClass extends AbstractQueryFilter
+{
+	/**
+	 * Columns that are searchable
+	 *
+	 * @var array
+	 */
+	protected $searchableColumns = [
+		//
+	];
+}

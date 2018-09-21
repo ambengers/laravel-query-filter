@@ -1,0 +1,42 @@
+{
+    "name": "ambengers/query-filter",
+    "description": "Laravel package for filtering resources with request query string",
+    "keywords": [
+        "query",
+        "filter",
+        "laravel"
+    ],
+    "type": "library",
+    "license": "MIT",
+    "authors": [
+        {
+            "name": "Marvin Quezon",
+            "email": "quezon.marvin@gmail.com"
+        }
+    ],
+    "require": {},
+    "require-dev": {
+        "mockery/mockery": "~1.0",
+        "phpunit/phpunit": "^7.0",
+        "orchestra/testbench": "~3.0"
+    },
+    "autoload": {
+        "psr-4": {
+            "Ambengers\\QueryFilter\\": "src/"
+        }
+    },
+    "autoload-dev": {
+        "psr-4": {
+            "Ambengers\\QueryFilter\\Tests\\": "tests/"
+        }
+    },
+    "extra": {
+        "laravel": {
+            "providers": [
+                "Ambengers\\QueryFilter\\QueryFilterServiceProvider"
+            ]
+        }
+    },
+    "minimum-stability": "dev",
+    "prefer-stable": true
+}
