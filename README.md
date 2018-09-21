@@ -27,7 +27,7 @@ Optionally, you can publish the config file by running the following command.
 ``` bash
 php artisan vendor:publish --tag=query_filter
 ```
-The config file contains the configuration for the namespace and path of the filter classes. The default namespace is `App\Filters` and default path is '`app/Filters`.
+The config file contains the configuration for the namespace and path of the filter classes. The default namespace is `App\Filters` and default path is `app/Filters`.
 
 ## Usage
 Make your model use the `QueryFilterable` trait
