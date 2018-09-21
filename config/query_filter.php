@@ -10,5 +10,5 @@ return [
 	/**
 	 * The directory path to store the query filter classes
 	 */
-   'path' => base_path('app/filters'),
+	'path' => base_path('app/filters'),
 ];
