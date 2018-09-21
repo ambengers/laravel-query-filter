@@ -58,7 +58,7 @@ class PostFilter extends AbstractQueryFilter
      */
     public function published()
     {
-	      return $this->builder->whereNotNull('published_at');
+      return $this->builder->whereNotNull('published_at');
     }
 }
 ```
@@ -76,9 +76,9 @@ class PostController extends Controller
      */
     public function index(PostFilter $filters)
     {
-	      $posts = Post::filter($filters);
+      $posts = Post::filter($filters);
 
-	      return PostResource::collection($posts);
+      return PostResource::collection($posts);
     }
 }
 ```
