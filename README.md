@@ -3,6 +3,8 @@ This packages provides an elegant way to filter your eloquent models via the req
 
 Inspired by [Laracasts](https://laracasts.com/series/eloquent-techniques/episodes/4)
 
+[![Build Status](https://travis-ci.org/ambengers/laravel-query-filter.svg?branch=master)](https://travis-ci.org/ambengers/laravel-query-filter)
+
 ## Features
 This packages allows you to create filters via the request query string. By default, it offers sorting, pagination and search using the following syntax:
 
