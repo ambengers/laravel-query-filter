@@ -168,10 +168,11 @@ abstract class AbstractQueryFilter
     {
         $result = $this->apply($builder)->get();
 
-        $perPage = $this->input('per_page', 15);
-        $page = $this->input('page', 1);
-
-        return $this->paginate($result, $perPage, $page);
+        return $this->paginate(
+            $result,
+            $this->input('per_page', 15),
+            $this->input('page', 1)
+        );
     }
 
     /**
@@ -189,14 +190,10 @@ abstract class AbstractQueryFilter
 
         $items = $items instanceof Collection ? $items : Collection::make($items);
 
-        if ($this->shouldSort()) {
-            $items = $this->sortCollection($items);
-        }
-
-        $itemsForPage = $items->forPage($page, $perPage);
+        $items = $this->shouldSort() ? $this->sortCollection($items) : $items;
 
         return new LengthAwarePaginator(
-            $itemsForPage, $items->count(), $perPage, $page, $options
+            $items->forPage($page, $perPage), $items->count(), $perPage, $page, $options
         );
     }
 
