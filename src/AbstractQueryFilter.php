@@ -189,13 +189,11 @@ abstract class AbstractQueryFilter
 
         $items = $items instanceof Collection ? $items : Collection::make($items);
 
-        $itemsForPage = $items->forPage($page, $perPage);
-
-        // If there is a sort key, then let's
-        // sort the items for this page..
         if ($this->shouldSort()) {
-            $itemsForPage = $this->sortCollection($itemsForPage);
+            $items = $this->sortCollection($items);
         }
+
+        $itemsForPage = $items->forPage($page, $perPage);
 
         return new LengthAwarePaginator(
             $itemsForPage, $items->count(), $perPage, $page, $options

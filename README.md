@@ -120,7 +120,7 @@ class PostFilter extends AbstractQueryFilter
 ## Caveats
 1. This package automatically detects pagination when request query string has `page` and/or `per_page` keys.
 2. If pagination keys are not present on the request query string, it will return a collection result.
-3. Pagination when combined with Sorting only paginates the current page that is being requested.
+
 
 ## Similar Packages
 [cerbero90/query-filters](https://github.com/cerbero90/query-filters)

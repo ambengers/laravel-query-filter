@@ -3,6 +3,7 @@
 namespace Ambengers\QueryFilter\Tests;
 
 use Orchestra\Testbench\TestCase;
+use Illuminate\Foundation\Testing\TestResponse;
 
 class FeatureTest extends TestCase
 {
@@ -18,6 +19,14 @@ class FeatureTest extends TestCase
 		$this->loadMigrations();
 
 		$this->withFactories(__DIR__.'/Factories');
+
+        TestResponse::macro('data', function ($key = null) {
+            if (!$key) { return $this->original; }
+            if ($this->original instanceof Collection) {
+                return $this->original->{$key};
+            }
+            return $this->original->getData()['key'];
+        });
 	}
 
 	/**

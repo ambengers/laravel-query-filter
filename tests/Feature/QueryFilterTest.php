@@ -96,6 +96,22 @@ class QueryFilterTest extends FeatureTest
 	}
 
 	/** @test */
+	public function it_sorts_the_entire_collection_when_there_is_pagination()
+	{
+		$posts = factory(Post::class, 30)->create();
+
+		$response = $this->getJson(route('posts.index', ['page' => 1, 'per_page' => 10, 'sort=id|desc']))
+			->assertSuccessful();
+
+		$this->assertTrue($response->data()->first()->is($posts->last()));
+
+		$response = $this->getJson(route('posts.index', ['page' => 3, 'per_page' => 10, 'sort=id|desc']))
+			->assertSuccessful();
+
+		$this->assertTrue($response->data()->last()->is($posts->first()));
+	}
+
+	/** @test */
 	public function it_can_detect_per_page_pagination()
 	{
 		factory(Post::class, 100)->create();
