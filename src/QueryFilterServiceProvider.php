@@ -4,6 +4,7 @@ namespace Ambengers\QueryFilter;
 
 use Illuminate\Support\ServiceProvider;
 use Ambengers\QueryFilter\Console\QueryFilterMakeCommand;
+use Ambengers\QueryFilter\Console\QueryLoaderMakeCommand;
 
 class QueryFilterServiceProvider extends ServiceProvider
 {
@@ -27,11 +28,13 @@ class QueryFilterServiceProvider extends ServiceProvider
     public function register()
     {
         $this->mergeConfigFrom(
-            __DIR__.'/../config/query_filter.php', 'query_filter'
+            __DIR__.'/../config/query_filter.php',
+            'query_filter'
         );
 
         if ($this->app->runningInConsole()) {
             $this->commands(QueryFilterMakeCommand::class);
+            $this->commands(QueryLoaderMakeCommand::class);
         }
     }
 }
