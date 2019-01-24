@@ -162,7 +162,7 @@ And that's it! You can now use the `load` param on your query string to load rel
 /posts?load=comments,author
 ```
 
-Note: Relationships multiple words can be declared using either camel or snake case within the `$loadables` array.
+Note: Relationships with multiple words can be declared using either camel or snake case within the `$loadables` array.
 The package will automatically convert the relationships into snake case which is typically how you will write your relationship methods.
 Also, relationships that are not declared in `$loadables` array will not be eager-loaded even if used in query string.
 
