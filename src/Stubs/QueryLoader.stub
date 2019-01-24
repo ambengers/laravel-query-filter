@@ -1,0 +1,17 @@
+<?php
+
+namespace DummyNamespace;
+
+use Ambengers\QueryFilter\AbstractQueryLoader;
+
+class DummyClass extends AbstractQueryLoader
+{
+    /**
+     * Relationships that can be lazy/eager loaded
+     *
+     * @var array
+     */
+    protected $loadables = [
+        //
+    ];
+}

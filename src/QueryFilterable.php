@@ -4,16 +4,16 @@ namespace Ambengers\QueryFilter;
 
 trait QueryFilterable
 {
-	/**
+    /**
      * Filter a query
      *
      * @param  Illuminnate\Database\Eloquent\Builder $query
-     * @param  AbstractQueryFilter $filters
+     * @param  Ambengers\QueryFilter\RequestQueryBuilder $filters
      * @return Illuminnate\Database\Eloquent\Builder
      */
-    public function scopeFilter($query, AbstractQueryFilter $filters)
+    public function scopeFilter($query, RequestQueryBuilder $filters)
     {
-        if ($filters->shouldPaginate()) {
+        if ((! $filters instanceof AbstractQueryLoader) && $filters->shouldPaginate()) {
             return $filters->getPaginated($query);
         }
 

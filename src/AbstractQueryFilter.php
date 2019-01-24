@@ -6,70 +6,61 @@ use Illuminate\Http\Request;
 use Illuminate\Support\Collection;
 use Illuminate\Pagination\Paginator;
 use Illuminate\Database\Eloquent\Builder;
+use Ambengers\QueryFilter\RequestQueryBuilder;
 use Illuminate\Pagination\LengthAwarePaginator;
+use Ambengers\QueryFilter\Exceptions\MissingLoaderClassException;
 
-abstract class AbstractQueryFilter
+abstract class AbstractQueryFilter extends RequestQueryBuilder
 {
-    use Concerns\InteractsWithRequest;
-
     /**
-     * Query builder instance
+     * Perform a lazy/eager load from query string
      *
-     * @var Illuminate\Database\Query\Builder
+     * @return Illuminate\Database\Eloquent\Builder
      */
-    protected $builder;
-
-    /**
-     * List of searchable columns
-     *
-     * @var array
-     */
-    protected $searchableColumns = [];
-
-    /**
-     * Construct the object
-     *
-     * @param Request $request
-     * @return  void
-     */
-    public function __construct(Request $request)
+    public function load($relations = '')
     {
-        $this->request = $request;
-    }
-
-    /**
-     * Apply the filters to the query
-     *
-     * @param  Illuminate\Database\Query\Builder $builder
-     * @return Illuminate\Database\Query\Builder $builder
-     */
-    public function apply(Builder $builder)
-    {
-        $this->builder = $builder;
-
-        foreach ($this->filters() as $method => $params) {
-            $method = camel_case($method);
-            if (method_exists($this, $method)) {
-                call_user_func_array([$this, $method], array_filter([$params]));
-            }
+        if (!$relations) {
+            return $this->builder;
         }
 
-        return $this->builder;
+        if (!$this->loader) {
+            throw new MissingLoaderClassException(
+                'Loader class is not defined on this filter instance.'
+            );
+        }
+
+        return $this->newLoaderInstance()
+            ->setEloquentBuilder($this->builder)
+            ->load($relations);
     }
 
     /**
-     * Perform a search from query
+     * Get a new loader class instance
+     *
+     * @return Ambengers\QueryFilter\AbstractQueryLoader
+     */
+    protected function newLoaderInstance()
+    {
+        return new $this->loader($this->request);
+    }
+
+    /**
+     * Perform a search from query string
      *
      * @param  string $text
      * @return Illuminate\Database\Eloquent\Builder
      */
     public function search($text = '')
     {
-        if ($text == '') { return $this->builder; }
+        if ($text == '') {
+            return $this->builder;
+        }
 
         // If we dont have anything in searchable columns
         // lets just return the builder to save query
-        if (!$this->searchableColumns) { return $this->builder; }
+        if (!$this->searchableColumns) {
+            return $this->builder;
+        }
 
         return $this->builder->where(function ($query) use ($text) {
             // Since we have a search filter, let's spin
@@ -113,7 +104,9 @@ abstract class AbstractQueryFilter
      */
     protected function performRelationshipSearch(Builder $builder, $related, $columns = '', $text = '')
     {
-        if ($text == '') { return $builder; }
+        if ($text == '') {
+            return $builder;
+        }
 
         $columns = is_array($columns) ? $columns : [$columns];
 
@@ -127,35 +120,6 @@ abstract class AbstractQueryFilter
                 }
             });
         });
-    }
-
-    /**
-     * Get the collection results after applying the filters
-     *
-     * @param  Builder $builder
-     * @return Illuminate\Support\Collection
-     */
-    public function getCollection(Builder $builder)
-    {
-        $result = $this->apply($builder)->get();
-
-        return $this->shouldSort() ? $this->sortCollection($result) : $result;
-    }
-
-    /**
-     * Sort a filtered result
-     *
-     * @param  Illuminate\Support\Collection   $collection
-     * @param  AbstractQueryFilter $filter
-     * @return Illuminate\Support\Collection
-     */
-    protected function sortCollection(Collection $collection)
-    {
-        list($key, $order) = explode('|', $this->input('sort'));
-
-        return $order === 'desc' ?
-            $collection->sortByDesc($key) :
-            $collection->sortBy($key);
     }
 
     /**
@@ -193,7 +157,11 @@ abstract class AbstractQueryFilter
         $items = $this->shouldSort() ? $this->sortCollection($items) : $items;
 
         return new LengthAwarePaginator(
-            $items->forPage($page, $perPage), $items->count(), $perPage, $page, $options
+            $items->forPage($page, $perPage),
+            $items->count(),
+            $perPage,
+            $page,
+            $options
         );
     }
 
@@ -214,7 +182,6 @@ abstract class AbstractQueryFilter
      */
     public function shouldPaginate()
     {
-    	return $this->has('page') || $this->has('per_page');
+        return $this->has('page') || $this->has('per_page');
     }
-
 }

@@ -1,0 +1,24 @@
+<?php
+
+namespace DummyNamespace;
+
+use Ambengers\QueryFilter\AbstractQueryFilter;
+
+class DummyClass extends AbstractQueryFilter
+{
+    /**
+     * Relationship loader class
+     *
+     * @var string
+     */
+    protected $loader = '';
+
+    /**
+     * Columns that are searchable
+     *
+     * @var array
+     */
+    protected $searchableColumns = [
+        //
+    ];
+}
