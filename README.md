@@ -119,6 +119,82 @@ class PostFilter extends AbstractQueryFilter
 }
 ```
 
+## Release 2.0 - Loadable Relationships
+This feature allows you to load relationships of models from the query string.
+First you will need to use the `make:query-loader` command to create your loader class.
+
+```php
+php artisan make:query-loader PostLoader
+```
+
+Then you will have to declare the loader class within your filter class.
+``` php
+use App\Loaders\PostLoader;
+
+class PostFilter extends AbstractQueryFilter
+{
+  /**
+   * Loader class
+   *
+   * @var string
+   */
+   protected $loader = PostLoader::class;
+}
+```
+
+Then on the loader class, you will need to declare the relationships that can be loaded within `$loadables` array.
+``` php
+class PostLoader extends AbstractQueryLoader
+{
+    /**
+     * Relationships that can be lazy/eager loaded
+     *
+     * @var array
+     */
+    protected $loadables = [
+        'comments', 'author'
+    ];
+}
+```
+
+And that's it! You can now use the `load` param on your query string to load relationships like so:
+``` php
+/posts?load=comments,author
+```
+
+Note: Relationships multiple words can be declared using either camel or snake case within the `$loadables` array.
+The package will automatically convert the relationships into snake case which is typically how you will write your relationship methods.
+Also, relationships that are not declared in `$loadables` array will not be eager-loaded even if used in query string.
+
+## Using Loader On The Controller@show Action
+`Controller@show` action will typically return a single model instance instead of a collection.
+However, there are cases that you will need an ability to optionally load relationships via query string as well.
+
+You can inject your loader class as an argument to your `show` method, then call the `filter` method on your and pass the loader instance.
+``` php
+class PostController extends Controller
+{
+    /**
+     * Display the specified resource.
+     *
+     * @param App\Models\Post $post
+     * @param App\Loaders\PostLoader $loader
+     * @return Illuminate\Http\JsonResponse
+     */
+    public function show(Post $post, PostLoader $loader)
+    {
+        $post = $post->filter($loader);
+
+        return response()->json($post);
+    }
+}
+```
+
+Now you should be able to load your relationships from your query string.
+``` php
+/posts/1?load=comments,author
+```
+
 ## Caveats
 1. This package automatically detects pagination when request query string has `page` and/or `per_page` keys.
 2. If pagination keys are not present on the request query string, it will return a collection result.
