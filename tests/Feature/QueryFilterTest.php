@@ -2,6 +2,7 @@
 
 namespace Ambengers\QueryFilter\Tests\Feature;
 
+use Illuminate\Support\Collection;
 use Ambengers\QueryFilter\Tests\FeatureTest;
 use Ambengers\QueryFilter\Tests\Models\Post;
 use Ambengers\QueryFilter\Tests\Models\Comment;
@@ -198,6 +199,8 @@ class QueryFilterTest extends FeatureTest
             ->assertJsonFragment(['body' => $comment1->body])
             ->assertJsonFragment(['body' => $comment2->body])
             ->assertJsonFragment(['body' => $comment3->body]);
+
+        $this->assertTrue($response->data() instanceof Post);
     }
 
     /** @test */

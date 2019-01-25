@@ -13,7 +13,11 @@ trait QueryFilterable
      */
     public function scopeFilter($query, RequestQueryBuilder $filters)
     {
-        if ((! $filters instanceof AbstractQueryLoader) && $filters->shouldPaginate()) {
+        if ($filters instanceof AbstractQueryLoader) {
+            return $filters->getCollection($query)->first();
+        }
+
+        if ($filters->shouldPaginate()) {
             return $filters->getPaginated($query);
         }
 
