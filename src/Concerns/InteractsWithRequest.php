@@ -5,14 +5,14 @@ namespace Ambengers\QueryFilter\Concerns;
 trait InteractsWithRequest
 {
     /**
-     * Request instance
+     * Request instance.
      *
      * @var Illuminate\Http\Request
      */
     protected $request;
 
     /**
-     * Get all the query filters from the request
+     * Get all the query filters from the request.
      *
      * @return array
      */
@@ -22,10 +22,10 @@ trait InteractsWithRequest
     }
 
     /**
-     * Check if a key is present in request
+     * Check if a key is present in request.
      *
      * @param  string  $key
-     * @return boolean
+     * @return bool
      */
     public function has($key)
     {
@@ -33,10 +33,10 @@ trait InteractsWithRequest
     }
 
     /**
-     * Check if a key is filled with value in request
+     * Check if a key is filled with value in request.
      *
      * @param  string $key
-     * @return boolean
+     * @return bool
      */
     public function filled($key)
     {
@@ -44,7 +44,7 @@ trait InteractsWithRequest
     }
 
     /**
-     * Retrieve a value from request
+     * Retrieve a value from request.
      *
      * @param  string $key
      * @param  string|null $default

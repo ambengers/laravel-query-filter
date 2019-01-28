@@ -5,7 +5,7 @@ namespace Ambengers\QueryFilter;
 trait QueryFilterable
 {
     /**
-     * Filter a query
+     * Filter a query.
      *
      * @param  Illuminnate\Database\Eloquent\Builder $query
      * @param  Ambengers\QueryFilter\RequestQueryBuilder $filters

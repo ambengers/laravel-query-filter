@@ -4,19 +4,18 @@ namespace Ambengers\QueryFilter;
 
 use Illuminate\Support\Str;
 use Illuminate\Database\Eloquent\Builder;
-use Ambengers\QueryFilter\RequestQueryBuilder;
 
 abstract class AbstractQueryLoader extends RequestQueryBuilder
 {
     /**
-     * Relationships that can be lazy/eager loaded
+     * Relationships that can be lazy/eager loaded.
      *
      * @var array
      */
     protected $loadables = [];
 
     /**
-     * Set the builder instance
+     * Set the builder instance.
      *
      * @param Illuminate\Database\Eloquent\Builder $builder
      */
@@ -28,7 +27,7 @@ abstract class AbstractQueryLoader extends RequestQueryBuilder
     }
 
     /**
-     * Load relations based on the given query parameters
+     * Load relations based on the given query parameters.
      *
      * @param  Illuminate\Database\Eloquent\Builder $builder
      * @param  string $relations
@@ -36,7 +35,7 @@ abstract class AbstractQueryLoader extends RequestQueryBuilder
      */
     public function load($relations = '')
     {
-        if (!$relations) {
+        if (! $relations) {
             return $this->builder;
         }
 
@@ -48,7 +47,7 @@ abstract class AbstractQueryLoader extends RequestQueryBuilder
     }
 
     /**
-     * Transform array elements to camel case
+     * Transform array elements to camel case.
      *
      * @param  array  $arr
      * @return Illuminate\Support\Collection
