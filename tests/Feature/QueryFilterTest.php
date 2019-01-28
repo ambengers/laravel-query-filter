@@ -188,14 +188,17 @@ class QueryFilterTest extends FeatureTest
     {
         $this->withoutExceptionHandling();
 
-        $post = factory(Post::class)->create(['subject' => 'foobar barbazz']);
+        $post1 = factory(Post::class)->create(['subject' => 'Post One']);
+        $post2 = factory(Post::class)->create(['subject' => 'Second Sample']);
+        $post3 = factory(Post::class)->create(['subject' => 'foobar barbazz']);
 
-        $comment1 = factory(Comment::class)->create(['post_id' => $post->id]);
-        $comment2 = factory(Comment::class)->create(['post_id' => $post->id]);
-        $comment3 = factory(Comment::class)->create(['post_id' => $post->id]);
+        $comment1 = factory(Comment::class)->create(['post_id' => $post3->id]);
+        $comment2 = factory(Comment::class)->create(['post_id' => $post3->id]);
+        $comment3 = factory(Comment::class)->create(['post_id' => $post3->id]);
 
-        $response = $this->getJson(route('posts.show', ['post' => $post->id, 'load' => 'comments']))
+        $response = $this->getJson(route('posts.show', ['post' => $post3, 'load' => 'comments']))
             ->assertSuccessful()
+            ->assertJsonFragment(['subject' => $post3->subject])
             ->assertJsonFragment(['body' => $comment1->body])
             ->assertJsonFragment(['body' => $comment2->body])
             ->assertJsonFragment(['body' => $comment3->body]);

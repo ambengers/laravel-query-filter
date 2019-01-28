@@ -28,7 +28,7 @@ class PostController extends Controller
      *
      * @return Illuminate\Http\JsonResponse
      */
-    public function show(Post $post, PostLoader $loader)
+    public function show(PostLoader $loader, Post $post)
     {
         $post = $post->filter($loader);
 

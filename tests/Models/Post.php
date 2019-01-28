@@ -9,7 +9,7 @@ class Post extends Model
 {
     use QueryFilterable;
 
-	/**
+    /**
      * The attributes that are guarded.
      *
      * @var array
@@ -23,6 +23,6 @@ class Post extends Model
      */
     public function comments()
     {
-    	return $this->hasMany(Comment::class, 'post_id');
+        return $this->hasMany(Comment::class, 'post_id');
     }
 }

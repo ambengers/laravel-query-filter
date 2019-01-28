@@ -14,7 +14,10 @@ trait QueryFilterable
     public function scopeFilter($query, RequestQueryBuilder $filters)
     {
         if ($filters instanceof AbstractQueryLoader) {
-            return $filters->getCollection($query)->first();
+            return $filters
+                ->getCollection(
+                    $query->whereKey($this->getKey())
+                )->first();
         }
 
         if ($filters->shouldPaginate()) {
