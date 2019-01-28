@@ -5,28 +5,27 @@ namespace Ambengers\QueryFilter;
 use Illuminate\Http\Request;
 use Illuminate\Support\Collection;
 use Illuminate\Database\Eloquent\Builder;
-use Ambengers\QueryFilter\Concerns\InteractsWithRequest;
 
 abstract class RequestQueryBuilder
 {
     use Concerns\InteractsWithRequest;
 
     /**
-     * Query builder instance
+     * Query builder instance.
      *
      * @var Illuminate\Database\Query\Builder
      */
     protected $builder;
 
     /**
-     * List of searchable columns
+     * List of searchable columns.
      *
      * @var array
      */
     protected $searchableColumns = [];
 
     /**
-     * Construct the object
+     * Construct the object.
      *
      * @param Request $request
      * @return  void
@@ -37,7 +36,7 @@ abstract class RequestQueryBuilder
     }
 
     /**
-     * Apply the filters to the query
+     * Apply the filters to the query.
      *
      * @param  Illuminate\Database\Query\Builder $builder
      * @return Illuminate\Database\Query\Builder $builder
@@ -57,7 +56,7 @@ abstract class RequestQueryBuilder
     }
 
     /**
-     * Get the collection results after applying the filters
+     * Get the collection results after applying the filters.
      *
      * @param  Builder $builder
      * @return Illuminate\Support\Collection
@@ -74,7 +73,7 @@ abstract class RequestQueryBuilder
     }
 
     /**
-     * Sort a filtered result
+     * Sort a filtered result.
      *
      * @param  Illuminate\Support\Collection   $collection
      * @param  AbstractQueryFilter $filter

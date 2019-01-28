@@ -2,28 +2,26 @@
 
 namespace Ambengers\QueryFilter;
 
-use Illuminate\Http\Request;
 use Illuminate\Support\Collection;
 use Illuminate\Pagination\Paginator;
 use Illuminate\Database\Eloquent\Builder;
-use Ambengers\QueryFilter\RequestQueryBuilder;
 use Illuminate\Pagination\LengthAwarePaginator;
 use Ambengers\QueryFilter\Exceptions\MissingLoaderClassException;
 
 abstract class AbstractQueryFilter extends RequestQueryBuilder
 {
     /**
-     * Perform a lazy/eager load from query string
+     * Perform a lazy/eager load from query string.
      *
      * @return Illuminate\Database\Eloquent\Builder
      */
     public function load($relations = '')
     {
-        if (!$relations) {
+        if (! $relations) {
             return $this->builder;
         }
 
-        if (!$this->loader) {
+        if (! $this->loader) {
             throw new MissingLoaderClassException(
                 'Loader class is not defined on this filter instance.'
             );
@@ -35,7 +33,7 @@ abstract class AbstractQueryFilter extends RequestQueryBuilder
     }
 
     /**
-     * Get a new loader class instance
+     * Get a new loader class instance.
      *
      * @return Ambengers\QueryFilter\AbstractQueryLoader
      */
@@ -45,7 +43,7 @@ abstract class AbstractQueryFilter extends RequestQueryBuilder
     }
 
     /**
-     * Perform a search from query string
+     * Perform a search from query string.
      *
      * @param  string $text
      * @return Illuminate\Database\Eloquent\Builder
@@ -58,7 +56,7 @@ abstract class AbstractQueryFilter extends RequestQueryBuilder
 
         // If we dont have anything in searchable columns
         // lets just return the builder to save query
-        if (!$this->searchableColumns) {
+        if (! $this->searchableColumns) {
             return $this->builder;
         }
 
@@ -70,7 +68,7 @@ abstract class AbstractQueryFilter extends RequestQueryBuilder
     }
 
     /**
-     * Iterate through searchable columns
+     * Iterate through searchable columns.
      *
      * @param  Illuminate\Database\Eloquent\Builder $query
      * @param  string $searchText
@@ -94,7 +92,7 @@ abstract class AbstractQueryFilter extends RequestQueryBuilder
     }
 
     /**
-     * Search through related tables
+     * Search through related tables.
      *
      * @param  Illuminate\Database\Eloquent\Builder $builder
      * @param  string $related
@@ -123,7 +121,7 @@ abstract class AbstractQueryFilter extends RequestQueryBuilder
     }
 
     /**
-     * Get the paginated results after applying the filters
+     * Get the paginated results after applying the filters.
      *
      * @param  Builder $builder
      * @return Illuminate\Support\Collection
@@ -140,11 +138,11 @@ abstract class AbstractQueryFilter extends RequestQueryBuilder
     }
 
     /**
-     * Paginate a collection
+     * Paginate a collection.
      *
      * @param  mixed  $items
-     * @param  integer $perPage
-     * @param  integer  $page
+     * @param  int $perPage
+     * @param  int  $page
      * @param  array   $options
      * @return Illuminate\Pagination\LengthAwarePaginator
      */
@@ -166,7 +164,7 @@ abstract class AbstractQueryFilter extends RequestQueryBuilder
     }
 
     /**
-     * Determine if sorting parameter is present in query string
+     * Determine if sorting parameter is present in query string.
      *
      * @return bool
      */
@@ -176,7 +174,7 @@ abstract class AbstractQueryFilter extends RequestQueryBuilder
     }
 
     /**
-     * Determine if any pagination parameter is present in query string
+     * Determine if any pagination parameter is present in query string.
      *
      * @return bool
      */
