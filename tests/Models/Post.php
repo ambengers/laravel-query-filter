@@ -3,12 +3,9 @@
 namespace Ambengers\QueryFilter\Tests\Models;
 
 use Illuminate\Database\Eloquent\Model;
-use Ambengers\QueryFilter\QueryFilterable;
 
 class Post extends Model
 {
-    use QueryFilterable;
-
     /**
      * The attributes that are guarded.
      *
