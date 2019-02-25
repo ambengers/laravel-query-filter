@@ -73,7 +73,7 @@ abstract class RequestQueryBuilder
     }
 
     /**
-     * Get model by key
+     * Get model by key.
      *
      * @return Illuminate\Database\Eloquent\Model
      */

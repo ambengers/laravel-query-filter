@@ -4,8 +4,6 @@ namespace Ambengers\QueryFilter;
 
 use Illuminate\Support\ServiceProvider;
 use Illuminate\Database\Eloquent\Builder;
-use Ambengers\QueryFilter\AbstractQueryLoader;
-use Ambengers\QueryFilter\RequestQueryBuilder;
 use Ambengers\QueryFilter\Console\QueryFilterMakeCommand;
 use Ambengers\QueryFilter\Console\QueryLoaderMakeCommand;
 
@@ -44,13 +42,13 @@ class QueryFilterServiceProvider extends ServiceProvider
     }
 
     /**
-     * Boot the eloquent builder 'filter' macro
+     * Boot the eloquent builder 'filter' macro.
      *
      * @return mixed
      */
     protected function bootEloquentFilterMacro()
     {
-        /**
+        /*
          * Filter a query.
          *
          * @param  Illuminnate\Database\Eloquent\Builder $query
