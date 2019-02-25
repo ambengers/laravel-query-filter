@@ -17,8 +17,8 @@ class TestServiceProvider extends ServiceProvider
         Route::namespace('Ambengers\QueryFilter\Tests\Controllers')
             ->middleware('web')
             ->group(function () {
-                Route::get('/posts', 'PostController@index')->name('posts.index');
-                Route::get('/posts/{post}', 'PostController@show')->name('posts.show');
+                Route::get('/posts', 'PostsController@index')->name('posts.index');
+                Route::get('/posts/{post}', 'PostsController@show')->name('posts.show');
             });
     }
 
