@@ -3,8 +3,11 @@
 namespace Ambengers\QueryFilter\Tests\Feature;
 
 use Illuminate\Support\Collection;
+use Illuminate\Database\Eloquent\Builder;
 use Ambengers\QueryFilter\Tests\FeatureTest;
 use Ambengers\QueryFilter\Tests\Models\Post;
+use Ambengers\QueryFilter\AbstractQueryLoader;
+use Ambengers\QueryFilter\RequestQueryBuilder;
 use Ambengers\QueryFilter\Tests\Models\Comment;
 
 class QueryFilterTest extends FeatureTest

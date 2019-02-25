@@ -61,7 +61,7 @@ abstract class RequestQueryBuilder
      * @param  Builder $builder
      * @return Illuminate\Support\Collection
      */
-    public function getCollection(Builder $builder)
+    public function getFilteredModelCollection(Builder $builder)
     {
         $result = $this->apply($builder)->get();
 
@@ -70,6 +70,18 @@ abstract class RequestQueryBuilder
         }
 
         return $result;
+    }
+
+    /**
+     * Get model by key
+     *
+     * @return Illuminate\Database\Eloquent\Model
+     */
+    public function getFilteredModel(Builder $builder)
+    {
+        $builder = $builder->whereKey($builder->getModel()->getKey());
+
+        return $this->apply($builder)->first();
     }
 
     /**

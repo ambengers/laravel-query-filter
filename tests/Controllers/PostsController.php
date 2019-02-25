@@ -8,7 +8,7 @@ use Ambengers\QueryFilter\Tests\Models\Post;
 use Ambengers\QueryFilter\Tests\Filters\PostLoader;
 use Ambengers\QueryFilter\Tests\Filters\PostFilters;
 
-class PostController extends Controller
+class PostsController extends Controller
 {
     /**
      * Display a listing of the resource.
