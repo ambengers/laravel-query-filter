@@ -32,7 +32,7 @@ php artisan vendor:publish --tag=query_filter
 The config file contains the configuration for the namespace and path of the filter classes. The default namespace is `App\Filters` and default path is `app/Filters`.
 
 ## Usage
-Make your model use the `QueryFilterable` trait
+Make your model use the `QueryFilterable` trait [DEPRECATED] - No need to do this if you are using version 3.0 or up
 ``` php
 use Ambengers\QueryFilter\QueryFilterable;
 
