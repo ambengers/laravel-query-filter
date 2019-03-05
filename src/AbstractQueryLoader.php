@@ -51,7 +51,7 @@ abstract class AbstractQueryLoader extends RequestQueryBuilder
     }
 
     /**
-     * Parse the relations out of the given array
+     * Parse the relations out of the given array.
      *
      * @param  array  $relations
      * @return array
@@ -81,7 +81,7 @@ abstract class AbstractQueryLoader extends RequestQueryBuilder
     }
 
     /**
-     * Parse the constraints into callable query constrains
+     * Parse the constraints into callable query constrains.
      *
      * @param  array  $constraints
      * @return callable
@@ -98,7 +98,7 @@ abstract class AbstractQueryLoader extends RequestQueryBuilder
     }
 
     /**
-     * Transform array keys to camel case
+     * Transform array keys to camel case.
      *
      * @param  Illuminate\Support\Collection|array  $collection
      * @return Illuminate\Support\Collection
