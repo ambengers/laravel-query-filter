@@ -50,13 +50,7 @@ abstract class AbstractQueryFilter extends RequestQueryBuilder
      */
     public function search($text = '')
     {
-        if ($text == '') {
-            return $this->builder;
-        }
-
-        // If we dont have anything in searchable columns
-        // lets just return the builder to save query
-        if (! $this->searchableColumns) {
+        if (! $text || ! $this->searchableColumns) {
             return $this->builder;
         }
 
