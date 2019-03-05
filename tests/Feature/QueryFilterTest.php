@@ -2,21 +2,12 @@
 
 namespace Ambengers\QueryFilter\Tests\Feature;
 
-use Illuminate\Support\Collection;
-use Illuminate\Database\Eloquent\Builder;
 use Ambengers\QueryFilter\Tests\FeatureTest;
 use Ambengers\QueryFilter\Tests\Models\Post;
-use Ambengers\QueryFilter\AbstractQueryLoader;
-use Ambengers\QueryFilter\RequestQueryBuilder;
 use Ambengers\QueryFilter\Tests\Models\Comment;
 
 class QueryFilterTest extends FeatureTest
 {
-    protected function setUp()
-    {
-        parent::setUp();
-    }
-
     /** @test */
     public function it_can_search_for_models()
     {
@@ -258,5 +249,76 @@ class QueryFilterTest extends FeatureTest
         $this->assertTrue($results->has('first_page_url'));
         $this->assertTrue($results->has('last_page'));
         $this->assertTrue($results->has('last_page_url'));
+    }
+
+    /** @test */
+    public function can_load_soft_deleted_relationships()
+    {
+        $this->withoutExceptionHandling();
+
+        $post = factory(Post::class)->create(['subject' => 'foobar barbazz']);
+
+        $comment1 = factory(Comment::class)->create([
+            'post_id'       =>  $post->id,
+            'body'          =>  'Commenting out loud',
+        ]);
+
+        $comment2 = factory(Comment::class)->create([
+            'post_id'       =>  $post->id,
+            'body'          =>  'I have been deleted!',
+            'deleted_at'    =>  now(),
+        ]);
+
+        $response = $this->getJson(
+            route('posts.show', [
+                'post' => $post->id,
+                'load' => 'comments|withTrashed'
+            ])
+        )->assertSuccessful()
+        ->assertJsonFragment(['body' => $comment1->body])
+        ->assertJsonFragment(['body' => $comment2->body]);
+    }
+
+    /** @test */
+    public function can_load_comments_with_multiple_constraints()
+    {
+        $post = factory(Post::class)->create(['subject' => 'foobar barbazz']);
+
+        $comment1 = factory(Comment::class)->create([
+            'post_id'       =>  $post->id,
+            'body'          =>  'Commenting out loud',
+        ]);
+
+        $comment2 = factory(Comment::class)->create([
+            'post_id'       =>  $post->id,
+            'body'          =>  'I have been deleted!',
+            'deleted_at'    =>  now(),
+        ]);
+
+        $comment3 = factory(Comment::class)->create([
+            'post_id'       =>  $post->id,
+            'body'          =>  'I am not approved!',
+            'approved_at'   =>  null,
+        ]);
+
+        $response = $this->getJson(
+            route('posts.show', [
+                'post' => $post->id,
+                'load' => 'comments|withTrashed,approved'
+            ])
+        )->assertSuccessful()
+        ->assertJsonFragment(['body' => $comment1->body])
+        ->assertJsonFragment(['body' => $comment2->body])
+        ->assertJsonFragment(['body' => $comment3->body]);
+
+        $response = $this->getJson(
+            route('posts.show', [
+                'post' => $post->id,
+                'load' => 'comments|onlyTrashed'
+            ])
+        )->assertSuccessful()
+        ->assertJsonMissing(['body' => $comment1->body])
+        ->assertJsonFragment(['body' => $comment2->body])
+        ->assertJsonMissing(['body' => $comment3->body]);
     }
 }
