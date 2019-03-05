@@ -195,6 +195,13 @@ Now you should be able to load your relationships from your query string.
 /posts/1?load=comments,author
 ```
 
+## Including Soft Delete Constraints (3.1)
+As of release 3.1, you can now include soft deleted constraits when requesting for eager loaded models using the pipe symbol like so:
+```php
+/posts/1?load=comments|withTrashed // comments will include soft deleted models
+/posts/1?load=comments|onlyTrashed // comments will include only soft deleted models
+```
+
 ## Caveats
 1. This package automatically detects pagination when request query string has `page` and/or `per_page` keys.
 2. If pagination keys are not present on the request query string, it will return a collection result.
