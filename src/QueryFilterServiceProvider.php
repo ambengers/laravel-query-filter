@@ -48,14 +48,9 @@ class QueryFilterServiceProvider extends ServiceProvider
      */
     protected function bootEloquentFilterMacro()
     {
-        /*
-         * Filter a query.
-         *
-         * @param  Illuminnate\Database\Eloquent\Builder $query
-         * @param  Ambengers\QueryFilter\RequestQueryBuilder $filters
-         * @return mixed
-         */
-        Builder::macro('filter', function (RequestQueryBuilder $filters) {
+        $method = config('query_filter.method', 'filter');
+
+        Builder::macro($method, function (RequestQueryBuilder $filters) {
             if ($filters instanceof AbstractQueryLoader) {
                 return $filters->getFilteredModel($this);
             }

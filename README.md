@@ -157,7 +157,7 @@ class PostLoader extends AbstractQueryLoader
 }
 ```
 
-And that's it! You can now use the `load` param on your query string to load relationships like so:
+And that's it! You can now use the `load` param on your query string to load relationships.
 ``` php
 /posts?load=comments,author
 ```
@@ -196,10 +196,21 @@ Now you should be able to load your relationships from your query string.
 ```
 
 ## Including Soft Delete Constraints (3.1)
-As of release 3.1, you can now include soft deleted constraits when requesting for eager loaded models using the pipe symbol like so:
+As of release 3.1, you can now include soft deleted constraits when requesting for eager loaded models using the pipe symbol.
 ```php
 /posts/1?load=comments|withTrashed // comments will include soft deleted models
 /posts/1?load=comments|onlyTrashed // comments will include only soft deleted models
+```
+
+## Preventing Method Name Clash
+As of release 3.1, you can now customize the method name you call on your model to use the query filter.
+Just update the value of the `method` key in the query_filter config file.
+```php
+return [
+    // The method to call to use the query filter
+    'method' => 'fooBar', // You can now call $post->fooBar($loaders)
+...
+]
 ```
 
 ## Caveats
