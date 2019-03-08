@@ -22,7 +22,7 @@ This packages allows you to create filters via the request query string. By defa
 ## Installation
 Run the following command in the terminal.
 ``` bash
-composer require "ambengers/query-filter":"^2.0"
+composer require "ambengers/query-filter":"^3.0"
 ```
 
 Optionally, you can publish the config file by running the following command.
