@@ -31,17 +31,8 @@ php artisan vendor:publish --tag=query_filter
 ```
 The config file contains the configuration for the namespace and path of the filter classes. The default namespace is `App\Filters` and default path is `app/Filters`.
 
-## Usage
-Make your model use the `QueryFilterable` trait [DEPRECATED] - No need to do this if you are using version 3.0 or up
-``` php
-use Ambengers\QueryFilter\QueryFilterable;
-
-class Post extends Model
-{
-    use QueryFilterable;
-}
-```
-
+# Usage
+## Method Based Filters
 Then you can make a filter class using the `make:query-filter` command.
 ``` php
 php artisan make:query-filter PostFilter
@@ -85,6 +76,52 @@ class PostController extends Controller
 }
 ```
 
+## Object Based Filters
+If you like a more object oriented approach for creating your filters, you can create a `$filters` array in your Filter class to declare your filters.
+```php
+use Ambengers\QueryFilter\AbstractQueryFilter;
+
+class PostFilter extends AbstractQueryFilter
+{
+  /**
+   * List of filters.
+   *
+   * @var array
+   */
+  protected $filters = [
+    'published' =>  \App\Filters\Published::class,
+  ];
+}
+```
+`$filters` array will receive a key-value pair in which the key is the param in your query string and the value is the filter object that will handle the filtering.
+
+Then you can use the `make:query-filter-object` command to generate your filter object.
+Note: filter objects will use the same namespace as your filter class.
+```php
+php artisan make:query-filter-object Published
+```
+
+The filter object is a simple invokable class that accepts the `Eloquent\Builder` as first parameter and the query string value as the second parameter.
+You can then put the filter logic in the invoke method.
+```php
+use Illuminate\Database\Eloquent\Builder;
+
+class Published
+{
+  /**
+   * Handle the filtering
+   *
+   * @param  Illuminate\Database\Eloquent\Builder $builder
+   * @param  string|null  $value
+   * @return Illuminate\Database\Eloquent\Builder
+   */
+  public function __invokable(Builder $builder, $value = null)
+  {
+    $builder->whereNotNull('published_at');
+  }
+}
+```
+
 ## Searchable Columns
 This package allows you to define the columns that are searchable. By default, when you generate a filter class with `make:query-filter` command,
 the class will contain a `$searchableColumns` array. You can then include your searchable columns of your model in this array.
@@ -119,7 +156,7 @@ class PostFilter extends AbstractQueryFilter
 }
 ```
 
-## Release 2.0 - Loadable Relationships
+## Loadable Relationships
 This feature allows you to load relationships of models from the query string.
 First you will need to use the `make:query-loader` command to create your loader class.
 
@@ -195,15 +232,15 @@ Now you should be able to load your relationships from your query string.
 /posts/1?load=comments,author
 ```
 
-## Including Soft Delete Constraints (3.1)
-As of release 3.1, you can now include soft deleted constraits when requesting for eager loaded models using the pipe symbol.
+## Including Soft Delete Constraints
+You can include soft deleted constraits when requesting for eager loaded models using the pipe symbol.
 ```php
 /posts/1?load=comments|withTrashed // comments will include soft deleted models
 /posts/1?load=comments|onlyTrashed // comments will include only soft deleted models
 ```
 
 ## Preventing Method Name Clash
-As of release 3.1, you can now customize the method name you call on your model to use the query filter.
+You can customize the method name you call on your model to use the query filter.
 Just update the value of the `method` key in the query_filter config file.
 ```php
 return [

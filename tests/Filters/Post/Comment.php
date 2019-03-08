@@ -10,7 +10,7 @@ class Comment
      * Handle the filtering
      *
      * @param  Illuminate\Database\Eloquent\Builder $builder
-     * @param  string  $value
+     * @param  string|null  $value
      * @return Illuminate\Database\Eloquent\Builder
      */
     public function __invoke(Builder $builder, $value = null)

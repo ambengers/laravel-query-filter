@@ -21,4 +21,13 @@ class DummyClass extends AbstractQueryFilter
     protected $searchableColumns = [
         //
     ];
+
+    /**
+     * List of object filters.
+     *
+     * @var array
+     */
+    protected $filters = [
+        //
+    ];
 }
