@@ -7,14 +7,14 @@ use Ambengers\QueryFilter\AbstractQueryFilter;
 class DummyClass extends AbstractQueryFilter
 {
     /**
-     * Relationship loader class
+     * Relationship loader class.
      *
      * @var string
      */
     protected $loader = '';
 
     /**
-     * Columns that are searchable
+     * Columns that are searchable.
      *
      * @var array
      */
