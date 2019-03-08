@@ -32,7 +32,7 @@ php artisan vendor:publish --tag=query_filter
 The config file contains the configuration for the namespace and path of the filter classes. The default namespace is `App\Filters` and default path is `app/Filters`.
 
 # Usage
-## Method Based Filters
+## Method-based Filters
 Then you can make a filter class using the `make:query-filter` command.
 ``` php
 php artisan make:query-filter PostFilter
@@ -76,7 +76,7 @@ class PostController extends Controller
 }
 ```
 
-## Object Based Filters
+## Object-based Filters
 If you like a more object oriented approach for creating your filters, you can create a `$filters` array in your Filter class to declare your filters.
 ```php
 use Ambengers\QueryFilter\AbstractQueryFilter;
