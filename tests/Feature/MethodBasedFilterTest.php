@@ -5,9 +5,20 @@ namespace Ambengers\QueryFilter\Tests\Feature;
 use Ambengers\QueryFilter\Tests\FeatureTest;
 use Ambengers\QueryFilter\Tests\Models\Post;
 use Ambengers\QueryFilter\Tests\Models\Comment;
+use Ambengers\QueryFilter\Tests\Filters\PostFilterInterface;
+use Ambengers\QueryFilter\Tests\Filters\PostMethodBasedFilters;
 
-class QueryFilterTest extends FeatureTest
+class MethodBasedFilterTest extends FeatureTest
 {
+    protected function setUp() : void
+    {
+        parent::setUp();
+
+        app()->bind(PostFilterInterface::class, function ($app) {
+            return new PostMethodBasedFilters(request());
+        });
+    }
+
     /** @test */
     public function it_can_search_for_models()
     {
@@ -133,6 +144,8 @@ class QueryFilterTest extends FeatureTest
     /** @test */
     public function it_can_filter_by_comment_id()
     {
+        $this->withoutExceptionHandling();
+
         $post1 = factory(Post::class)->create();
         $comment1 = factory(Comment::class)->create([
             'post_id'   =>  $post1->id,

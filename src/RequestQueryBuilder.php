@@ -2,9 +2,11 @@
 
 namespace Ambengers\QueryFilter;
 
+use Illuminate\Support\Str;
 use Illuminate\Http\Request;
 use Illuminate\Support\Collection;
 use Illuminate\Database\Eloquent\Builder;
+use Ambengers\QueryFilter\Exceptions\ObjectFilterNotInvokableException;
 
 abstract class RequestQueryBuilder
 {
@@ -23,6 +25,13 @@ abstract class RequestQueryBuilder
      * @var array
      */
     protected $searchableColumns = [];
+
+    /**
+     * List of filters
+     *
+     * @var array
+     */
+    protected $filters = [];
 
     /**
      * Construct the object.
@@ -45,14 +54,53 @@ abstract class RequestQueryBuilder
     {
         $this->builder = $builder;
 
-        foreach ($this->filters() as $method => $params) {
-            $method = camel_case($method);
-            if (method_exists($this, $method)) {
-                call_user_func_array([$this, $method], array_filter([$params]));
+        foreach ($this->all() as $key => $value) {
+            $key = Str::camel($key);
+
+            $this->filters = $this->camelKeys($this->filters)->toArray();
+
+            if (array_key_exists($key, $this->filters)) {
+                $this->objectBasedFilter($key, $value);
+
+                continue;
+            }
+
+            if (method_exists($this, $key)) {
+                $this->methodBasedFilter($key, $value);
             }
         }
 
         return $this->builder;
+    }
+
+    /**
+     * Call the invokable object of the filter
+     *
+     * @param  string $key
+     * @param  string $value
+     * @return void
+     */
+    protected function objectBasedFilter($key, $value)
+    {
+        $object = new $this->filters[$key];
+
+        if (is_callable($object)) {
+            return $object($this->builder, $value);
+        }
+
+        throw new ObjectFilterNotInvokableException('Object filter must be callable.');
+    }
+
+    /**
+     * Call method of the filter
+     *
+     * @param  string $key
+     * @param  string $value
+     * @return void
+     */
+    protected function methodBasedFilter($key, $value)
+    {
+        call_user_func_array([$this, $key], array_filter([$value]));
     }
 
     /**
@@ -98,5 +146,31 @@ abstract class RequestQueryBuilder
         return $order === 'desc' ?
             $collection->sortByDesc($key) :
             $collection->sortBy($key);
+    }
+
+    /**
+     * Transform array keys to camel case.
+     *
+     * @param  Illuminate\Support\Collection|array  $collection
+     * @return Illuminate\Support\Collection
+     */
+    protected function camelKeys($collection)
+    {
+        return collect($collection)->keyBy(function ($item, $key) {
+            return Str::camel($key);
+        });
+    }
+
+    /**
+     * Transform array elements to camel case.
+     *
+     * @param  Illuminate\Support\Collection|array  $collection
+     * @return Illuminate\Support\Collection
+     */
+    protected function camelElements($collection)
+    {
+        return collect($collection)->map(function ($item) {
+            return Str::camel($item);
+        });
     }
 }

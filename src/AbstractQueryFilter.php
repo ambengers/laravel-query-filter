@@ -13,9 +13,10 @@ abstract class AbstractQueryFilter extends RequestQueryBuilder
     /**
      * Perform a lazy/eager load from query string.
      *
+     * @param  string $relations
      * @return Illuminate\Database\Eloquent\Builder
      */
-    public function load($relations = '')
+    public function load($relations = null)
     {
         if (! $relations) {
             return $this->builder;
@@ -48,7 +49,7 @@ abstract class AbstractQueryFilter extends RequestQueryBuilder
      * @param  string $text
      * @return Illuminate\Database\Eloquent\Builder
      */
-    public function search($text = '')
+    public function search($text = null)
     {
         if (! $text || ! $this->searchableColumns) {
             return $this->builder;

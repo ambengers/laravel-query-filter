@@ -40,11 +40,11 @@ abstract class AbstractQueryLoader extends RequestQueryBuilder
         }
 
         $relations = collect(
-            $this->keysToCamelCase(
+            $this->camelKeys(
                 $this->parseRelations(explode(',', $relations))
             )
         )->intersectByKeys(
-            $this->elementsToCamelCase($this->loadables)->flip()
+            $this->camelElements($this->loadables)->flip()
         )->toArray();
 
         return $this->builder->with($relations);
@@ -95,31 +95,5 @@ abstract class AbstractQueryLoader extends RequestQueryBuilder
                 $query->$constraint();
             }
         };
-    }
-
-    /**
-     * Transform array keys to camel case.
-     *
-     * @param  Illuminate\Support\Collection|array  $collection
-     * @return Illuminate\Support\Collection
-     */
-    protected function keysToCamelCase($collection)
-    {
-        return collect($collection)->flatMap(function ($item, $key) {
-            return [Str::camel($key) => $item];
-        });
-    }
-
-    /**
-     * Transform array elements to camel case.
-     *
-     * @param  Illuminate\Support\Collection|array  $collection
-     * @return Illuminate\Support\Collection
-     */
-    protected function elementsToCamelCase($collection)
-    {
-        return collect($collection)->map(function ($item) {
-            return Str::camel($item);
-        });
     }
 }

@@ -16,7 +16,7 @@ trait InteractsWithRequest
      *
      * @return array
      */
-    public function filters()
+    public function all()
     {
         return $this->request->all();
     }

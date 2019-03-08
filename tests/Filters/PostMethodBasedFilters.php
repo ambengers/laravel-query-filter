@@ -3,9 +3,8 @@
 namespace Ambengers\QueryFilter\Tests\Filters;
 
 use Ambengers\QueryFilter\AbstractQueryFilter;
-use Ambengers\QueryFilter\Tests\Filters\PostLoader;
 
-class PostFilters extends AbstractQueryFilter
+class PostMethodBasedFilters extends AbstractQueryFilter implements PostFilterInterface
 {
     /**
      * Loader class

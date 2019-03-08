@@ -11,7 +11,7 @@ use Ambengers\QueryFilter\Tests\Models\Post;
 use Ambengers\QueryFilter\AbstractQueryLoader;
 use Ambengers\QueryFilter\RequestQueryBuilder;
 use Illuminate\Foundation\Testing\TestResponse;
-use Ambengers\QueryFilter\Tests\Filters\PostFilters;
+use Ambengers\QueryFilter\Tests\Filters\PostMethodBasedFilters;
 
 class MethodSubstitutionTest extends FeatureTest
 {
@@ -28,7 +28,7 @@ class MethodSubstitutionTest extends FeatureTest
         $post2 = factory(Post::class)->create(['subject' => 'bang bang']);
 
         $posts = Post::fooBar(
-            new PostFilters(
+            new PostMethodBasedFilters(
                 app(Request::class)->merge(['search' => 'barbazz'])
             )
         );
