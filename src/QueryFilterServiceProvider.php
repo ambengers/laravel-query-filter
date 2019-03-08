@@ -6,6 +6,7 @@ use Illuminate\Support\ServiceProvider;
 use Illuminate\Database\Eloquent\Builder;
 use Ambengers\QueryFilter\Console\QueryFilterMakeCommand;
 use Ambengers\QueryFilter\Console\QueryLoaderMakeCommand;
+use Ambengers\QueryFilter\Console\QueryFilterObjectMakeCommand;
 
 class QueryFilterServiceProvider extends ServiceProvider
 {
@@ -38,6 +39,7 @@ class QueryFilterServiceProvider extends ServiceProvider
         if ($this->app->runningInConsole()) {
             $this->commands(QueryFilterMakeCommand::class);
             $this->commands(QueryLoaderMakeCommand::class);
+            $this->commands(QueryFilterObjectMakeCommand::class);
         }
     }
 
