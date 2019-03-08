@@ -27,7 +27,7 @@ abstract class RequestQueryBuilder
     protected $searchableColumns = [];
 
     /**
-     * List of filters
+     * List of filters.
      *
      * @var array
      */
@@ -74,7 +74,7 @@ abstract class RequestQueryBuilder
     }
 
     /**
-     * Call the invokable object of the filter
+     * Call the invokable object of the filter.
      *
      * @param  string $key
      * @param  string $value
@@ -92,7 +92,7 @@ abstract class RequestQueryBuilder
     }
 
     /**
-     * Call method of the filter
+     * Call method of the filter.
      *
      * @param  string $key
      * @param  string $value
