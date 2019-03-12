@@ -34,6 +34,16 @@ class Comment extends Model
     }
 
     /**
+     * User relationship
+     *
+     * @return Illuminate\Database\Eloquent\Relations\BelongsTo
+     */
+    public function user()
+    {
+        return $this->belongsTo(User::class, 'user_id');
+    }
+
+    /**
      * Scope the query to approved
      *
      * @param  Illuminate\Database\Eloquent\Builder $query
