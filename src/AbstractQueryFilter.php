@@ -2,10 +2,7 @@
 
 namespace Ambengers\QueryFilter;
 
-use Illuminate\Support\Collection;
-use Illuminate\Pagination\Paginator;
 use Illuminate\Database\Eloquent\Builder;
-use Illuminate\Pagination\LengthAwarePaginator;
 use Ambengers\QueryFilter\Exceptions\MissingLoaderClassException;
 
 abstract class AbstractQueryFilter extends RequestQueryBuilder
@@ -112,7 +109,7 @@ abstract class AbstractQueryFilter extends RequestQueryBuilder
     }
 
     /**
-     * Apply an orderBy clause to the query
+     * Apply an orderBy clause to the query.
      *
      * @return Illuminate\Database\Eloquent\Builder
      */
