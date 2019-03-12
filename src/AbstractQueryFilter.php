@@ -66,21 +66,21 @@ abstract class AbstractQueryFilter extends RequestQueryBuilder
      * Iterate through searchable columns.
      *
      * @param  Illuminate\Database\Eloquent\Builder $query
-     * @param  string $searchText
+     * @param  string $text
      * @return void
      */
-    protected function performSearch($query, $searchText)
+    protected function performSearch($query, $text)
     {
         foreach ($this->searchableColumns as $attribute => $value) {
             // If the value is an array, that means we want to search through a relationship.
             // We need to make sure that we send through the closure's query instance so we
             // can have an 'AND' query with nested queries wrapped within a parenthesis.
             if (is_array($value)) {
-                $this->performRelationshipSearch($query, $attribute, $value, $searchText);
+                $this->performRelationsSearch($query, $attribute, $value, $text);
                 continue;
             }
 
-            $query->orWhere($value, 'like', "%{$searchText}%");
+            $query->orWhere($value, 'like', "%{$text}%");
         }
 
         return $query;
@@ -90,17 +90,13 @@ abstract class AbstractQueryFilter extends RequestQueryBuilder
      * Search through related tables.
      *
      * @param  Illuminate\Database\Eloquent\Builder $builder
-     * @param  string $related
-     * @param  array $columns
-     * @param  string $text
+     * @param  string                               $related
+     * @param  array|string                         $columns
+     * @param  string                               $text
      * @return Illuminate\Database\Eloquent\Builder
      */
-    protected function performRelationshipSearch(Builder $builder, $related, $columns = '', $text = '')
+    protected function performRelationsSearch(Builder $builder, $related, $columns, $text)
     {
-        if ($text == '') {
-            return $builder;
-        }
-
         $columns = is_array($columns) ? $columns : [$columns];
 
         return $builder->orWhereHas($related, function ($query) use ($columns, $text) {
@@ -116,56 +112,30 @@ abstract class AbstractQueryFilter extends RequestQueryBuilder
     }
 
     /**
+     * Apply an orderBy clause to the query
+     *
+     * @return Illuminate\Database\Eloquent\Builder
+     */
+    public function sort()
+    {
+        $sorting = explode('|', $this->input('sort'));
+
+        return $this->builder->orderBy(
+            $sorting[0],
+            $sorting[1] ?? 'asc'
+        );
+    }
+
+    /**
      * Get the paginated results after applying the filters.
      *
-     * @param  Builder $builder
+     * @param  Illuminate\Database\Eloquent\Builder $builder
      * @return Illuminate\Support\Collection
      */
-    public function getPaginated(Builder $builder)
+    public function paginate(Builder $builder)
     {
-        $result = $this->apply($builder)->get();
-
-        return $this->paginate(
-            $result,
-            $this->input('per_page', 15),
-            $this->input('page', 1)
-        );
-    }
-
-    /**
-     * Paginate a collection.
-     *
-     * @param  mixed  $items
-     * @param  int $perPage
-     * @param  int  $page
-     * @param  array   $options
-     * @return Illuminate\Pagination\LengthAwarePaginator
-     */
-    protected function paginate($items, $perPage = 15, $page = null, $options = [])
-    {
-        $page = $page ?: (Paginator::resolveCurrentPage() ?: 1);
-
-        $items = $items instanceof Collection ? $items : Collection::make($items);
-
-        $items = $this->shouldSort() ? $this->sortCollection($items) : $items;
-
-        return new LengthAwarePaginator(
-            $items->forPage($page, $perPage),
-            $items->count(),
-            $perPage,
-            $page,
-            $options
-        );
-    }
-
-    /**
-     * Determine if sorting parameter is present in query string.
-     *
-     * @return bool
-     */
-    public function shouldSort()
-    {
-        return $this->filled('sort');
+        return $this->apply($builder)
+            ->paginate($this->input('per_page', 15));
     }
 
     /**
