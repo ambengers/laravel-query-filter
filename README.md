@@ -6,18 +6,7 @@ Inspired by [Laracasts](https://laracasts.com/series/eloquent-techniques/episode
 [![Build Status](https://travis-ci.org/ambengers/laravel-query-filter.svg?branch=master)](https://travis-ci.org/ambengers/laravel-query-filter)
 [![StyleCI](https://github.styleci.io/repos/149767189/shield?branch=master)](https://github.styleci.io/repos/149767189)
 ## Features
-This packages allows you to create filters via the request query string. By default, it offers sorting, pagination and search using the following syntax:
-
-``` php
-/** Sorting */
-/posts?sort=created_at|asc
-
-/** Pagination */
-/posts?page=2&per_page=10
-
-/** Search */
-/posts?search=foobar
-```
+This packages allows you to create filters via the request query string. Out of the box, this package offers sorting, pagination and search.
 
 ## Installation
 Run the following command in the terminal.
@@ -122,9 +111,42 @@ class Published
 }
 ```
 
-## Searchable Columns
+## Sorting
+If you want columns of your models to be sortable, by default, when you generate a filter class with `make:query-filter` command,
+the class will contain a `$sortableColumns` array. You can then list the sortable columns of your model in this array.
+```php
+
+class PostFilter extends AbstractQueryFilter
+{
+  /**
+   * List of searchable columns
+   *
+   * @var array
+   */
+  protected $sortableColumns = ['id', 'subject', 'body'];
+}
+```
+Then, your endpoint will now be able to call the sort filter using `field|direction` syntax.
+``` php
+/** Sorting */
+/posts?sort=created_at|asc
+```
+
+## Pagination
+This package offers pagination by default.
+``` php
+/** Pagination */
+/posts?page=2
+```
+Behind the scenes, it uses Laravel's own pagination, which the default `per_page` size is 15. Of course, you can override this behaviour like so.
+``` php
+/** Pagination */
+/posts?page=2&per_page=10
+```
+
+## Search
 This package allows you to define the columns that are searchable. By default, when you generate a filter class with `make:query-filter` command,
-the class will contain a `$searchableColumns` array. You can then include your searchable columns of your model in this array.
+the class will contain a `$searchableColumns` array. You can then list the searchable columns of your model in this array.
 ``` php
 
 class PostFilter extends AbstractQueryFilter
@@ -157,7 +179,7 @@ class PostFilter extends AbstractQueryFilter
 ```
 
 ## Loadable Relationships
-This feature allows you to load relationships of models from the query string.
+This packages allows you to load relationships of models using the query string.
 First you will need to use the `make:query-loader` command to create your loader class.
 
 ```php
