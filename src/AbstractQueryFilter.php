@@ -114,12 +114,14 @@ abstract class AbstractQueryFilter extends RequestQueryBuilder
      */
     public function sort()
     {
-        $sorting = explode('|', $this->input('sort'));
+        list($field, $value) = explode('|', $this->input('sort'));
 
-        return $this->builder->orderBy(
-            $sorting[0],
-            $sorting[1] ?? 'asc'
-        );
+        return ! in_array($field, $this->sortableColumns)
+            ? $this->builder
+            : $this->builder->orderBy(
+                $field,
+                $value ?? 'asc'
+            );
     }
 
     /**

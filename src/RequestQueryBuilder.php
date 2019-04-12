@@ -27,6 +27,13 @@ abstract class RequestQueryBuilder
     protected $searchableColumns = [];
 
     /**
+     * List of sortable columns.
+     *
+     * @var array
+     */
+    protected $sortableColumns = [];
+
+    /**
      * List of filters.
      *
      * @var array
