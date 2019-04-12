@@ -1,14 +1,14 @@
-## Laravel Query Filter
+# Laravel Query Filter
 This packages provides an elegant way to filter your eloquent models via the request query string.
 
 Inspired by [Laracasts](https://laracasts.com/series/eloquent-techniques/episodes/4)
 
 [![Build Status](https://travis-ci.org/ambengers/laravel-query-filter.svg?branch=master)](https://travis-ci.org/ambengers/laravel-query-filter)
 [![StyleCI](https://github.styleci.io/repos/149767189/shield?branch=master)](https://github.styleci.io/repos/149767189)
-## Features
+# Features
 This packages allows you to create filters via the request query string. Out of the box, this package offers sorting, pagination and search.
 
-## Installation
+# Installation
 Run the following command in the terminal.
 ``` bash
 composer require "ambengers/query-filter":"^3.0"
