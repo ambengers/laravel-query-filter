@@ -81,7 +81,6 @@ abstract class AbstractQueryFilter extends RequestQueryBuilder
             }
         }
 
-
         return $query;
     }
 
