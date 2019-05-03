@@ -56,7 +56,7 @@ class SearchFilterTest extends FeatureTest
             'body'      =>  'Dont search',
         ]);
 
-        $response = $this->getJson(route('posts.index', ['search' => 'Commenting out loud']))
+        $response = $this->getJson(route('posts.index', ['search' => 'Commenting']))
             ->assertSuccessful();
 
         $response->assertJsonFragment([
@@ -115,5 +115,60 @@ class SearchFilterTest extends FeatureTest
             ->assertSuccessful()
             ->assertJsonFragment(['subject' => $post1->subject])
             ->assertJsonMissing(['subject' => $post2->subject]);
+    }
+
+    /** @test */
+    public function it_can_search_with_multiple_words()
+    {
+        $post1 = factory(Post::class)->create(['subject' => 'foobar barbazz']);
+        $post2 = factory(Post::class)->create(['subject' => 'barbazz foobar']);
+        $post3 = factory(Post::class)->create(['subject' => 'bang bang']);
+
+        $response = $this->getJson(route('posts.index', ['search' => 'foobar barbazz']))
+            ->assertSuccessful();
+
+        $response->assertJsonFragment([
+            'subject'   =>  $post1->subject,
+            'body'      =>  $post1->body,
+        ]);
+
+        $response->assertJsonFragment([
+            'subject'   =>  $post2->subject,
+            'body'      =>  $post2->body,
+        ]);
+
+        $response->assertJsonMissing([
+            'subject'   =>  $post3->subject,
+            'body'      =>  $post3->body,
+        ]);
+    }
+
+    /** @test */
+    public function it_can_search_with_multiple_words_through_relationship()
+    {
+        $post1 = factory(Post::class)->create(['subject' => 'foobar barbazz']);
+        $comment1 = factory(Comment::class)->create([
+            'post_id'   =>  $post1->id,
+            'body'      =>  'Commenting out loud',
+        ]);
+
+        $post2 = factory(Post::class)->create();
+        $comment2 = factory(Comment::class)->create([
+            'post_id'   =>  $post2->id,
+            'body'      =>  'Dont search',
+        ]);
+
+        $response = $this->getJson(route('posts.index', ['search' => 'loud out commenting']))
+            ->assertSuccessful();
+
+        $response->assertJsonFragment([
+            'subject'   =>  $post1->subject,
+            'body'      =>  $post1->body,
+        ]);
+
+        $response->assertJsonMissing([
+            'subject'   =>  $post2->subject,
+            'body'      =>  $post2->body,
+        ]);
     }
 }

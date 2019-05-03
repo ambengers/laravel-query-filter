@@ -68,14 +68,19 @@ abstract class AbstractQueryFilter extends RequestQueryBuilder
      */
     protected function performSearch($query, $text)
     {
-        foreach ($this->searchableColumns as $attribute => $value) {
-            // If the value is an array, that means we want to search through a relationship.
-            // We need to make sure that we send through the closure's query instance so we
-            // can have an 'AND' query with nested queries wrapped within a parenthesis.
-            is_array($value)
-                ? $this->performRelationsSearch($query, $attribute, $value, $text) :
-                $query->orWhere($value, 'like', "%{$text}%");
+        $searchable = explode(' ', $text);
+
+        foreach ($searchable as $word) {
+            foreach ($this->searchableColumns as $attribute => $value) {
+                // If the value is an array, that means we want to search through a relationship.
+                // We need to make sure that we send through the closure's query instance so we
+                // can have an 'AND' query with nested queries wrapped within a parenthesis.
+                is_array($value)
+                    ? $this->performRelationsSearch($query, $attribute, $value, $word) :
+                    $query->orWhere($value, 'like', "%{$word}%");
+            }
         }
+
 
         return $query;
     }
