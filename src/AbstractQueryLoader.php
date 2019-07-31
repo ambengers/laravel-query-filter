@@ -65,7 +65,7 @@ abstract class AbstractQueryLoader extends RequestQueryBuilder
             // eager loaded relationship. We will need to save the relation as the key and provide the parsed
             // constraints as a value. Parsed constraints will be a closure that eloquent builder can run.
             if (Str::contains($relation, '|')) {
-                list($relation, $constraints) = explode('|', $relation);
+                [$relation, $constraints] = explode('|', $relation);
 
                 $results[$relation] = $this->parseConstraints(explode(',', $constraints));
 
