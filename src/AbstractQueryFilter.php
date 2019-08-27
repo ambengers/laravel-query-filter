@@ -65,22 +65,23 @@ abstract class AbstractQueryFilter extends RequestQueryBuilder
     /**
      * Iterate through searchable columns.
      *
-     * @param  Illuminate\Database\Eloquent\Builder $query
-     * @param  string $searchText
-     * @return void
+     * @param  Illuminate\Database\Eloquent\Builder  $query
+     * @param $text
+     * @return Illuminate\Database\Eloquent\Builder
      */
-    protected function performSearch($query, $searchText)
+    protected function performSearch($query, $text)
     {
-        foreach ($this->searchableColumns as $attribute => $value) {
-            // If the value is an array, that means we want to search through a relationship.
-            // We need to make sure that we send through the closure's query instance so we
-            // can have an 'AND' query with nested queries wrapped within a parenthesis.
-            if (is_array($value)) {
-                $this->performRelationshipSearch($query, $attribute, $value, $searchText);
-                continue;
-            }
+        $searchable = explode(' ', $text);
 
-            $query->orWhere($value, 'like', "%{$searchText}%");
+        foreach ($searchable as $word) {
+            foreach ($this->searchableColumns as $attribute => $value) {
+                // If the value is an array, that means we want to search through a relationship.
+                // We need to make sure that we send through the closure's query instance so we
+                // can have an 'AND' query with nested queries wrapped within a parenthesis.
+                is_array($value)
+                    ? $this->performRelationshipSearch($query, $attribute, $value, $word)
+                    : $query->orWhere($value, 'like', "%{$word}%");
+            }
         }
 
         return $query;
@@ -97,10 +98,6 @@ abstract class AbstractQueryFilter extends RequestQueryBuilder
      */
     protected function performRelationshipSearch(Builder $builder, $related, $columns = '', $text = '')
     {
-        if ($text == '') {
-            return $builder;
-        }
-
         $columns = is_array($columns) ? $columns : [$columns];
 
         return $builder->orWhereHas($related, function ($query) use ($columns, $text) {
@@ -108,8 +105,10 @@ abstract class AbstractQueryFilter extends RequestQueryBuilder
             // statement inside a where statement if incase the
             // relatonship is also running query scopes
             $query->where(function ($query) use ($columns, $text) {
-                foreach ($columns as $key => $value) {
-                    $query->orWhere($value, 'like', "%{$text}%");
+                foreach ($columns as $attribute => $value) {
+                    is_array($value)
+                        ? $this->performRelationshipSearch($query, $attribute, $value, $text)
+                        : $query->orWhere($value, 'like', "%{$text}%");
                 }
             });
         });
