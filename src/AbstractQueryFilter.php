@@ -76,7 +76,7 @@ abstract class AbstractQueryFilter extends RequestQueryBuilder
                 // We need to make sure that we send through the closure's query instance so we
                 // can have an 'AND' query with nested queries wrapped within a parenthesis.
                 is_array($value)
-                    ? $this->performRelationsSearch($query, $attribute, $value, $word) 
+                    ? $this->performRelationsSearch($query, $attribute, $value, $word)
                     : $query->orWhere($value, 'like', "%{$word}%");
             }
         }
@@ -104,7 +104,7 @@ abstract class AbstractQueryFilter extends RequestQueryBuilder
             $query->where(function ($query) use ($columns, $text) {
                 foreach ($columns as $attribute => $value) {
                     is_array($value)
-                        ? $this->performRelationsSearch($query, $attribute, $value, $text) 
+                        ? $this->performRelationsSearch($query, $attribute, $value, $text)
                         : $query->orWhere($value, 'like', "%{$text}%");
                 }
             });
