@@ -27,13 +27,6 @@ abstract class RequestQueryBuilder
     protected $searchableColumns = [];
 
     /**
-     * List of sortable columns.
-     *
-     * @var array
-     */
-    protected $sortableColumns = [];
-
-    /**
      * List of filters.
      *
      * @var array
@@ -114,7 +107,13 @@ abstract class RequestQueryBuilder
      */
     public function getFilteredModelCollection(Builder $builder)
     {
-        return $this->apply($builder)->get();
+        $result = $this->apply($builder)->get();
+
+        if ((! $this instanceof AbstractQueryLoader) && $this->shouldSort()) {
+            return $this->sortCollection($result);
+        }
+
+        return $result;
     }
 
     /**

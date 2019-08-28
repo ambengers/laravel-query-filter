@@ -2,7 +2,10 @@
 
 namespace Ambengers\QueryFilter;
 
+use Illuminate\Support\Collection;
+use Illuminate\Pagination\Paginator;
 use Illuminate\Database\Eloquent\Builder;
+use Illuminate\Pagination\LengthAwarePaginator;
 use Ambengers\QueryFilter\Exceptions\MissingLoaderClassException;
 
 abstract class AbstractQueryFilter extends RequestQueryBuilder
@@ -112,20 +115,38 @@ abstract class AbstractQueryFilter extends RequestQueryBuilder
     }
 
     /**
-     * Apply an orderBy clause to the query.
+     * Sort a filtered result.
      *
-     * @return Illuminate\Database\Eloquent\Builder
+     * @param  Illuminate\Support\Collection        $collection
+     * @param  AbstractQueryFilter                  $filter
+     * @return Illuminate\Support\Collection
      */
-    public function sort()
+    protected function sortCollection(Collection $collection)
     {
         $sorting = explode('|', $this->input('sort'));
 
-        return ! in_array($sorting[0], $this->sortableColumns)
-            ? $this->builder
-            : $this->builder->orderBy(
-                $sorting[0],
-                $sorting[1] ?? 'asc'
-            );
+        if (isset($sorting[1]) && $sorting[1] == 'desc') {
+            return $collection->sortByDesc($sorting[0]);
+        }
+
+        return $collection->sortBy($sorting[0]);
+    }
+
+    /**
+     * Get the paginated results after applying the filters.
+     *
+     * @param  Builder $builder
+     * @return Illuminate\Support\Collection
+     */
+    public function getPaginated(Builder $builder)
+    {
+        $result = $this->apply($builder)->get();
+
+        return $this->paginate(
+            $result,
+            $this->input('per_page', 15),
+            $this->input('page', 1)
+        );
     }
 
     /**
@@ -134,10 +155,31 @@ abstract class AbstractQueryFilter extends RequestQueryBuilder
      * @param  Illuminate\Database\Eloquent\Builder $builder
      * @return Illuminate\Support\Collection
      */
-    public function paginate(Builder $builder)
+    public function paginate($items, $perPage = 15, $page = null, $options = [])
     {
-        return $this->apply($builder)
-            ->paginate($this->input('per_page', 15));
+        $page = $page ?: (Paginator::resolveCurrentPage() ?: 1);
+
+        $items = $items instanceof Collection ? $items : Collection::make($items);
+
+        $items = $this->shouldSort() ? $this->sortCollection($items) : $items;
+
+        return new LengthAwarePaginator(
+            $items->forPage($page, $perPage),
+            $items->count(),
+            $perPage,
+            $page,
+            $options
+        );
+    }
+
+    /**
+     * Determine if sorting parameter is present in query string.
+     *
+     * @return bool
+     */
+    public function shouldSort()
+    {
+        return $this->filled('sort');
     }
 
     /**

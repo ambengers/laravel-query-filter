@@ -58,7 +58,7 @@ class QueryFilterServiceProvider extends ServiceProvider
             }
 
             if ($filters->shouldPaginate()) {
-                return $filters->paginate($this);
+                return $filters->getPaginated($this);
             }
 
             return $filters->getFilteredModelCollection($this);

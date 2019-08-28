@@ -53,10 +53,11 @@ class MethodBasedFilterTest extends FeatureTest
         $this->assertTrue($results->last()->id === $post2->id);
     }
 
-
     /** @test */
     public function it_can_paginate()
     {
+        $this->withoutExceptionHandling();
+
         factory(Post::class, 15)->create();
 
         $response = $this->getJson(route('posts.index', ['page' => 1]))
