@@ -27,6 +27,13 @@ abstract class RequestQueryBuilder
     protected $searchableColumns = [];
 
     /**
+     * List of sortable columns.
+     *
+     * @var array
+     */
+    protected $sortableColumns = [];
+
+    /**
      * List of filters.
      *
      * @var array
@@ -61,11 +68,7 @@ abstract class RequestQueryBuilder
 
             if (array_key_exists($key, $this->filters)) {
                 $this->objectBasedFilter($key, $value);
-
-                continue;
-            }
-
-            if (method_exists($this, $key)) {
+            } elseif (method_exists($this, $key)) {
                 $this->methodBasedFilter($key, $value);
             }
         }
@@ -111,13 +114,7 @@ abstract class RequestQueryBuilder
      */
     public function getFilteredModelCollection(Builder $builder)
     {
-        $result = $this->apply($builder)->get();
-
-        if ((! $this instanceof AbstractQueryLoader) && $this->shouldSort()) {
-            return $this->sortCollection($result);
-        }
-
-        return $result;
+        return $this->apply($builder)->get();
     }
 
     /**
@@ -130,22 +127,6 @@ abstract class RequestQueryBuilder
         $builder = $builder->whereKey($builder->getModel()->getKey());
 
         return $this->apply($builder)->first();
-    }
-
-    /**
-     * Sort a filtered result.
-     *
-     * @param  Illuminate\Support\Collection   $collection
-     * @param  AbstractQueryFilter $filter
-     * @return Illuminate\Support\Collection
-     */
-    protected function sortCollection(Collection $collection)
-    {
-        list($key, $order) = explode('|', $this->input('sort'));
-
-        return $order === 'desc' ?
-            $collection->sortByDesc($key) :
-            $collection->sortBy($key);
     }
 
     /**

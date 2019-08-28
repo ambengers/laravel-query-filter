@@ -25,6 +25,13 @@ class PostMethodBasedFilters extends AbstractQueryFilter implements PostFilterIn
     ];
 
     /**
+     * List of sortable columns.
+     *
+     * @var array
+     */
+    protected $sortableColumns = ['id', 'subject'];
+
+    /**
      * Filter by comments id
      *
      * @param  string $id
@@ -32,7 +39,7 @@ class PostMethodBasedFilters extends AbstractQueryFilter implements PostFilterIn
      */
     public function comments($id = '')
     {
-        if (!$id) {
+        if (! $id) {
             return $this->builder;
         }
 

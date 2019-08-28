@@ -100,6 +100,7 @@ class SearchFilterTest extends FeatureTest
             'post_id'   =>  $post1->id,
             'user_id'   =>  $user1->id,
             'body'      =>  'Commenting out loud',
+
         ]);
 
         $post2 = factory(Post::class)->create(['subject' => 'flamingo rock']);
@@ -171,3 +172,4 @@ class SearchFilterTest extends FeatureTest
         ]);
     }
 }
+

@@ -20,57 +20,6 @@ class MethodBasedFilterTest extends FeatureTest
     }
 
     /** @test */
-    public function it_can_search_for_models()
-    {
-        $this->withoutExceptionHandling();
-
-        $post1 = factory(Post::class)->create(['subject' => 'foobar barbazz']);
-        $post2 = factory(Post::class)->create(['subject' => 'bang bang']);
-
-        $response = $this->getJson(route('posts.index', ['search' => 'foobar']))
-            ->assertSuccessful();
-
-        $response->assertJsonFragment([
-            'subject'   =>  $post1->subject,
-            'body'      =>  $post1->body,
-        ]);
-
-        $response->assertJsonMissing([
-            'subject'   =>  $post2->subject,
-            'body'      =>  $post2->body,
-        ]);
-    }
-
-    /** @test */
-    public function it_can_search_through_relationships()
-    {
-        $post1 = factory(Post::class)->create(['subject' => 'foobar barbazz']);
-        $comment1 = factory(Comment::class)->create([
-            'post_id'   =>  $post1->id,
-            'body'      =>  'Commenting out loud',
-        ]);
-
-        $post2 = factory(Post::class)->create();
-        $comment2 = factory(Comment::class)->create([
-            'post_id'   =>  $post2->id,
-            'body'      =>  'Dont search',
-        ]);
-
-        $response = $this->getJson(route('posts.index', ['search' => 'Commenting out loud']))
-            ->assertSuccessful();
-
-        $response->assertJsonFragment([
-            'subject'   =>  $post1->subject,
-            'body'      =>  $post1->body,
-        ]);
-
-        $response->assertJsonMissing([
-            'subject'   =>  $post2->subject,
-            'body'      =>  $post2->body,
-        ]);
-    }
-
-    /** @test */
     public function it_can_sort()
     {
         $this->withoutExceptionHandling();
@@ -86,6 +35,24 @@ class MethodBasedFilterTest extends FeatureTest
         $this->assertTrue($results->first()->id === $post2->id);
         $this->assertTrue($results->last()->id === $post1->id);
     }
+
+    /** @test */
+    public function it_does_not_sort_if_column_is_not_whitelisted()
+    {
+        $this->withoutExceptionHandling();
+
+        $post1 = factory(Post::class)->create(['subject' => 'foobar barbazz']);
+        $post2 = factory(Post::class)->create(['subject' => 'bang bang']);
+
+        $response = $this->getJson(route('posts.index', ['sort' => 'someothercolumn|asc']))
+            ->assertSuccessful();
+
+        $results = collect(json_decode($response->content()));
+
+        $this->assertTrue($results->first()->id === $post1->id);
+        $this->assertTrue($results->last()->id === $post2->id);
+    }
+
 
     /** @test */
     public function it_can_paginate()
@@ -211,27 +178,6 @@ class MethodBasedFilterTest extends FeatureTest
             ->assertJsonFragment(['body' => $comment3->body]);
 
         $this->assertTrue($response->data() instanceof Post);
-    }
-
-    /** @test */
-    public function it_can_search_and_load_relationships_at_the_same_time()
-    {
-        $post1 = factory(Post::class)->create(['subject' => 'foobar barbazz']);
-        $comment1 = factory(Comment::class)->create([
-            'post_id'   =>  $post1->id,
-            'body'      =>  'Commenting out loud',
-        ]);
-
-        $post2 = factory(Post::class)->create(['subject' => 'flamingo rock']);
-        $comment2 = factory(Comment::class)->create([
-            'post_id'   =>  $post2->id,
-            'body'      =>  'Dont search',
-        ]);
-
-        $response = $this->getJson(route('posts.index', ['search' => 'flamingo', 'load' => 'comments']))
-            ->assertSuccessful()
-            ->assertJsonFragment(['body' => $comment2->body])
-            ->assertJsonFragment(['subject' => 'flamingo rock']);
     }
 
     /** @test */

@@ -7,7 +7,7 @@ use Illuminate\Database\Eloquent\Builder;
 class DummyClass
 {
     /**
-     * Handle the filtering
+     * Handle the filtering.
      *
      * @param  Illuminate\Database\Eloquent\Builder $builder
      * @param  string|null  $value
