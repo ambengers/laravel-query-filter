@@ -172,3 +172,4 @@ class SearchFilterTest extends FeatureTest
         ]);
     }
 }
+
