@@ -53,14 +53,4 @@ class Comment extends Model
     {
         return $query->whereNotNull('approved_at');
     }
-
-    /**
-     * User relationship
-     *
-     * @return Illuminate\Database\Eloquent\Relations\BelongsTo
-     */
-    public function user()
-    {
-        return $this->belongsTo(User::class, 'user_id');
-    }
 }

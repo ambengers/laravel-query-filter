@@ -124,7 +124,7 @@ abstract class AbstractQueryFilter extends RequestQueryBuilder
             ? $this->builder
             : $this->builder->orderBy(
                 $sorting[0],
-                isset($sorting[1]) ? $sorting[1] : 'asc'
+                $sorting[1] ?? 'asc'
             );
     }
 
