@@ -121,7 +121,7 @@ class SearchFilterTest extends FeatureTest
     public function it_can_search_with_multiple_words()
     {
         $post1 = factory(Post::class)->create(['subject' => 'foobar barbazz']);
-        $post2 = factory(Post::class)->create(['subject' => 'barbazz foobar']);
+        $post2 = factory(Post::class)->create(['subject' => 'foobar']);
         $post3 = factory(Post::class)->create(['subject' => 'bang bang']);
 
         $response = $this->getJson(route('posts.index', ['search' => 'foobar barbazz']))
@@ -172,4 +172,3 @@ class SearchFilterTest extends FeatureTest
         ]);
     }
 }
-

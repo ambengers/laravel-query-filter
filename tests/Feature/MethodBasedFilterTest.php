@@ -37,23 +37,6 @@ class MethodBasedFilterTest extends FeatureTest
     }
 
     /** @test */
-    public function it_does_not_sort_if_column_is_not_whitelisted()
-    {
-        $this->withoutExceptionHandling();
-
-        $post1 = factory(Post::class)->create(['subject' => 'foobar barbazz']);
-        $post2 = factory(Post::class)->create(['subject' => 'bang bang']);
-
-        $response = $this->getJson(route('posts.index', ['sort' => 'someothercolumn|asc']))
-            ->assertSuccessful();
-
-        $results = collect(json_decode($response->content()));
-
-        $this->assertTrue($results->first()->id === $post1->id);
-        $this->assertTrue($results->last()->id === $post2->id);
-    }
-
-    /** @test */
     public function it_can_paginate()
     {
         $this->withoutExceptionHandling();
