@@ -2,8 +2,8 @@
 
 namespace Ambengers\QueryFilter;
 
-use Illuminate\Support\Str;
 use Illuminate\Database\Eloquent\Builder;
+use Illuminate\Support\Str;
 
 abstract class AbstractQueryLoader extends RequestQueryBuilder
 {

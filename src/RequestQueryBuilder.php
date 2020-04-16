@@ -2,11 +2,11 @@
 
 namespace Ambengers\QueryFilter;
 
-use Illuminate\Support\Str;
+use Ambengers\QueryFilter\Exceptions\ObjectFilterNotInvokableException;
+use Illuminate\Database\Eloquent\Builder;
 use Illuminate\Http\Request;
 use Illuminate\Support\Collection;
-use Illuminate\Database\Eloquent\Builder;
-use Ambengers\QueryFilter\Exceptions\ObjectFilterNotInvokableException;
+use Illuminate\Support\Str;
 
 abstract class RequestQueryBuilder
 {
