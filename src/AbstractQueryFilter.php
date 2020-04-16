@@ -2,12 +2,12 @@
 
 namespace Ambengers\QueryFilter;
 
-use Illuminate\Support\Collection;
-use Illuminate\Pagination\Paginator;
-use Illuminate\Database\Eloquent\Builder;
-use Illuminate\Pagination\LengthAwarePaginator;
-use Illuminate\Database\Eloquent\Relations\MorphTo;
 use Ambengers\QueryFilter\Exceptions\MissingLoaderClassException;
+use Illuminate\Database\Eloquent\Builder;
+use Illuminate\Database\Eloquent\Relations\MorphTo;
+use Illuminate\Pagination\LengthAwarePaginator;
+use Illuminate\Pagination\Paginator;
+use Illuminate\Support\Collection;
 
 abstract class AbstractQueryFilter extends RequestQueryBuilder
 {

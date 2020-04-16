@@ -2,11 +2,11 @@
 
 namespace Ambengers\QueryFilter;
 
-use Illuminate\Support\ServiceProvider;
-use Illuminate\Database\Eloquent\Builder;
 use Ambengers\QueryFilter\Console\QueryFilterMakeCommand;
-use Ambengers\QueryFilter\Console\QueryLoaderMakeCommand;
 use Ambengers\QueryFilter\Console\QueryFilterObjectMakeCommand;
+use Ambengers\QueryFilter\Console\QueryLoaderMakeCommand;
+use Illuminate\Database\Eloquent\Builder;
+use Illuminate\Support\ServiceProvider;
 
 class QueryFilterServiceProvider extends ServiceProvider
 {
