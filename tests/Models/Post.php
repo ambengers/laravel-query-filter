@@ -22,4 +22,9 @@ class Post extends Model
     {
         return $this->hasMany(Comment::class, 'post_id');
     }
+
+    public function category()
+    {
+        return $this->morphTo('category');
+    }
 }

@@ -21,15 +21,9 @@ class PostMethodBasedFilters extends AbstractQueryFilter implements PostFilterIn
     protected $searchableColumns = [
         'subject',
         'body',
-        'comments'  =>  ['body', 'user' => ['name']],
+        'comments' => ['body', 'user' => ['name']],
+        'category' => ['subject'],
     ];
-
-    /**
-     * List of sortable columns.
-     *
-     * @var array
-     */
-    protected $sortableColumns = ['id', 'subject'];
 
     /**
      * Filter by comments id

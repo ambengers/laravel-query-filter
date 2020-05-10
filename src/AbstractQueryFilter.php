@@ -2,11 +2,12 @@
 
 namespace Ambengers\QueryFilter;
 
-use Illuminate\Support\Collection;
-use Illuminate\Pagination\Paginator;
-use Illuminate\Database\Eloquent\Builder;
-use Illuminate\Pagination\LengthAwarePaginator;
 use Ambengers\QueryFilter\Exceptions\MissingLoaderClassException;
+use Illuminate\Database\Eloquent\Builder;
+use Illuminate\Database\Eloquent\Relations\MorphTo;
+use Illuminate\Pagination\LengthAwarePaginator;
+use Illuminate\Pagination\Paginator;
+use Illuminate\Support\Collection;
 
 abstract class AbstractQueryFilter extends RequestQueryBuilder
 {
@@ -100,7 +101,7 @@ abstract class AbstractQueryFilter extends RequestQueryBuilder
     {
         $columns = is_array($columns) ? $columns : [$columns];
 
-        return $builder->orWhereHas($related, function ($query) use ($columns, $text) {
+        $callback = function ($query) use ($columns, $text) {
             // Here, we want to make sure that we are grouping our orWhere
             // statement inside a where statement if incase the
             // relatonship is also running query scopes
@@ -111,7 +112,11 @@ abstract class AbstractQueryFilter extends RequestQueryBuilder
                         : $query->orWhere($value, 'like', "%{$text}%");
                 }
             });
-        });
+        };
+
+        return ($builder->getModel()->$related() instanceof MorphTo)
+            ? $builder->orWhereHasMorph($related, '*', $callback)
+            : $builder->orWhereHas($related, $callback);
     }
 
     /**

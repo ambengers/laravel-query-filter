@@ -2,11 +2,11 @@
 
 namespace Ambengers\QueryFilter;
 
-use Illuminate\Support\ServiceProvider;
-use Illuminate\Database\Eloquent\Builder;
 use Ambengers\QueryFilter\Console\QueryFilterMakeCommand;
-use Ambengers\QueryFilter\Console\QueryLoaderMakeCommand;
 use Ambengers\QueryFilter\Console\QueryFilterObjectMakeCommand;
+use Ambengers\QueryFilter\Console\QueryLoaderMakeCommand;
+use Illuminate\Database\Eloquent\Builder;
+use Illuminate\Support\ServiceProvider;
 
 class QueryFilterServiceProvider extends ServiceProvider
 {
@@ -19,7 +19,7 @@ class QueryFilterServiceProvider extends ServiceProvider
     {
         $this->publishes([
             __DIR__.'/../config/query_filter.php' => config_path('query_filter.php'),
-        ], 'query_filter');
+        ], 'query-filter-config');
 
         $this->bootEloquentFilterMacro();
     }
@@ -33,7 +33,7 @@ class QueryFilterServiceProvider extends ServiceProvider
     {
         $this->mergeConfigFrom(
             __DIR__.'/../config/query_filter.php',
-            'query_filter'
+            'query-filter-config'
         );
 
         if ($this->app->runningInConsole()) {
