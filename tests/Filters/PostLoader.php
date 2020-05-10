@@ -12,7 +12,6 @@ class PostLoader extends AbstractQueryLoader
      * @var array
      */
     protected $loadables = [
-        'undefined.Relation',
         'comments',
     ];
 }

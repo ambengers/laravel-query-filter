@@ -186,19 +186,13 @@ class SearchFilterTest extends FeatureTest
 
         $post1 = factory(Post::class)->create(['category_type' => $satire->getMorphClass(), 'category_id' => $satire->id]);
         $post2 = factory(Post::class)->create(['category_type' => $comedy->getMorphClass(), 'category_id' => $comedy->id]);
-        // $post3 = factory(Post::class)->create(['category_type' => null, 'category_id' => null]);
+        $post3 = factory(Post::class)->create(['category_type' => null, 'category_id' => null]);
 
         $response = $this->getJson(route('posts.index', ['search' => 'comedy']))
             ->assertSuccessful();
 
-        $response->assertJsonFragment([
-            'subject' => $post2->subject,
-            'body'    => $post2->body,
-        ]);
-
-        $response->assertJsonMissing([
-            'subject' => $post1->subject,
-            'body'    => $post1->body,
-        ]);
+        $response->assertJsonMissing(['subject' => $post1->subject, 'body' => $post1->body]);
+        $response->assertJsonFragment(['subject' => $post2->subject, 'body' => $post2->body]);
+        $response->assertJsonMissing(['subject' => $post3->subject, 'body' => $post3->body]);
     }
 }

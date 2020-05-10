@@ -19,7 +19,7 @@ class QueryFilterServiceProvider extends ServiceProvider
     {
         $this->publishes([
             __DIR__.'/../config/query_filter.php' => config_path('query_filter.php'),
-        ], 'query_filter');
+        ], 'query-filter-config');
 
         $this->bootEloquentFilterMacro();
     }
@@ -33,7 +33,7 @@ class QueryFilterServiceProvider extends ServiceProvider
     {
         $this->mergeConfigFrom(
             __DIR__.'/../config/query_filter.php',
-            'query_filter'
+            'query-filter-config'
         );
 
         if ($this->app->runningInConsole()) {
