@@ -91,7 +91,7 @@ php artisan make:query-filter-object Published
 ```
 
 The filter object is a simple invokable class that accepts the `Eloquent\Builder` as first parameter and the query string value as the second parameter.
-You can then put the filter logic in the invoke method.
+Include the filter logic in the invoke method, like so.
 ```php
 use Illuminate\Database\Eloquent\Builder;
 
@@ -112,24 +112,10 @@ class Published
 ```
 
 ## Sorting
-If you want columns of your models to be sortable, by default, when you generate a filter class with `make:query-filter` command,
-the class will contain a `$sortableColumns` array. You can then list the sortable columns of your model in this array.
-```php
-
-class PostFilter extends AbstractQueryFilter
-{
-  /**
-   * List of searchable columns
-   *
-   * @var array
-   */
-  protected $sortableColumns = ['id', 'subject', 'body'];
-}
-```
-Then, your endpoint will now be able to call the sort filter using `field|direction` syntax.
+This package offers sorting by default, following `field|direction` syntax, like so.
 ``` php
 /** Sorting */
-/posts?sort=created_at|asc
+/posts?sort=created_at|desc
 ```
 
 ## Pagination
@@ -143,10 +129,11 @@ Behind the scenes, it uses Laravel's own pagination, which the default `per_page
 /** Pagination */
 /posts?page=2&per_page=10
 ```
+Note: If pagination keys are not present on the request query string, it will return a collection result.
 
 ## Search
 This package allows you to define the columns that are searchable. By default, when you generate a filter class with `make:query-filter` command,
-the class will contain a `$searchableColumns` array. You can then list the searchable columns of your model in this array.
+the class will contain a `$searchableColumns` array. Then, list the searchable columns of your model in this array.
 ``` php
 
 class PostFilter extends AbstractQueryFilter
@@ -180,13 +167,13 @@ class PostFilter extends AbstractQueryFilter
 
 ## Loadable Relationships
 This packages allows you to load relationships of models using the query string.
-First you will need to use the `make:query-loader` command to create your loader class.
+First, use the `make:query-loader` command to create your loader class.
 
 ```php
 php artisan make:query-loader PostLoader
 ```
 
-Then you will have to declare the loader class within your filter class.
+Then, declare the loader class within your filter class.
 ``` php
 use App\Loaders\PostLoader;
 
@@ -201,7 +188,7 @@ class PostFilter extends AbstractQueryFilter
 }
 ```
 
-Then on the loader class, you will need to declare the relationships that can be loaded within `$loadables` array.
+Then on the loader class, declare the relationships that can be eager/lazy-loaded within `$loadables` array.
 ``` php
 class PostLoader extends AbstractQueryLoader
 {
@@ -216,7 +203,7 @@ class PostLoader extends AbstractQueryLoader
 }
 ```
 
-And that's it! You can now use the `load` param on your query string to load relationships.
+And that's it! Now use the `load` param on your query string to load relationships.
 ``` php
 /posts?load=comments,author
 ```
@@ -229,7 +216,7 @@ Also, relationships that are not declared in `$loadables` array will not be eage
 `Controller@show` action will typically return a single model instance instead of a collection.
 However, there are cases that you will need an ability to optionally load relationships via query string as well.
 
-You can inject your loader class as an argument to your `show` method, then call the `filter` method on your and pass the loader instance.
+Inject your loader class as an argument to your `show` method, then call the `filter` method on your and pass the loader instance.
 ``` php
 class PostController extends Controller
 {
@@ -255,27 +242,21 @@ Now you should be able to load your relationships from your query string.
 ```
 
 ## Including Soft Delete Constraints
-You can include soft deleted constraits when requesting for eager loaded models using the pipe symbol.
+Include soft deleted constraits when requesting for eager loaded models using the pipe symbol.
 ```php
 /posts/1?load=comments|withTrashed // comments will include soft deleted models
 /posts/1?load=comments|onlyTrashed // comments will include only soft deleted models
 ```
 
 ## Preventing Method Name Clash
-You can customize the method name you call on your model to use the query filter.
-Just update the value of the `method` key in the query_filter config file.
+To customize the method name you call on your model to use the query filter, just update the value of the `method` key in the query_filter config file.
 ```php
 return [
     // The method to call to use the query filter
-    'method' => 'fooBar', // You can now call $post->fooBar($loaders)
+    'method' => 'fooBar', // Now call $post->fooBar($loaders)
 ...
 ]
 ```
-
-## Caveats
-1. This package automatically detects pagination when request query string has `page` and/or `per_page` keys.
-2. If pagination keys are not present on the request query string, it will return a collection result.
-
 
 ## Similar Packages
 [cerbero90/query-filters](https://github.com/cerbero90/query-filters)
