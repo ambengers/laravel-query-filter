@@ -4,6 +4,8 @@ namespace Ambengers\QueryFilter\Tests\Feature;
 use Ambengers\QueryFilter\Tests\FeatureTest;
 use Ambengers\QueryFilter\Tests\Models\Post;
 use Ambengers\QueryFilter\Tests\Models\User;
+use Ambengers\QueryFilter\Tests\Models\Comedy;
+use Ambengers\QueryFilter\Tests\Models\Satire;
 use Ambengers\QueryFilter\Tests\Models\Comment;
 use Ambengers\QueryFilter\Tests\Filters\PostFilterInterface;
 use Ambengers\QueryFilter\Tests\Filters\PostMethodBasedFilters;
@@ -31,13 +33,13 @@ class SearchFilterTest extends FeatureTest
             ->assertSuccessful();
 
         $response->assertJsonFragment([
-            'subject'   =>  $post1->subject,
-            'body'      =>  $post1->body,
+            'subject' => $post1->subject,
+            'body'    => $post1->body,
         ]);
 
         $response->assertJsonMissing([
-            'subject'   =>  $post2->subject,
-            'body'      =>  $post2->body,
+            'subject' => $post2->subject,
+            'body'    => $post2->body,
         ]);
     }
 
@@ -46,27 +48,27 @@ class SearchFilterTest extends FeatureTest
     {
         $post1 = factory(Post::class)->create(['subject' => 'foobar barbazz']);
         $comment1 = factory(Comment::class)->create([
-            'post_id'   =>  $post1->id,
-            'body'      =>  'Commenting out loud',
+            'post_id' => $post1->id,
+            'body'    => 'Commenting out loud',
         ]);
 
         $post2 = factory(Post::class)->create();
         $comment2 = factory(Comment::class)->create([
-            'post_id'   =>  $post2->id,
-            'body'      =>  'Dont search',
+            'post_id' => $post2->id,
+            'body'    => 'Dont search',
         ]);
 
         $response = $this->getJson(route('posts.index', ['search' => 'Commenting']))
             ->assertSuccessful();
 
         $response->assertJsonFragment([
-            'subject'   =>  $post1->subject,
-            'body'      =>  $post1->body,
+            'subject' => $post1->subject,
+            'body'    => $post1->body,
         ]);
 
         $response->assertJsonMissing([
-            'subject'   =>  $post2->subject,
-            'body'      =>  $post2->body,
+            'subject' => $post2->subject,
+            'body'    => $post2->body,
         ]);
     }
 
@@ -75,14 +77,14 @@ class SearchFilterTest extends FeatureTest
     {
         $post1 = factory(Post::class)->create(['subject' => 'foobar barbazz']);
         $comment1 = factory(Comment::class)->create([
-            'post_id'   =>  $post1->id,
-            'body'      =>  'Commenting out loud',
+            'post_id' => $post1->id,
+            'body'    => 'Commenting out loud',
         ]);
 
         $post2 = factory(Post::class)->create(['subject' => 'flamingo rock']);
         $comment2 = factory(Comment::class)->create([
-            'post_id'   =>  $post2->id,
-            'body'      =>  'Dont search',
+            'post_id' => $post2->id,
+            'body'    => 'Dont search',
         ]);
 
         $response = $this->getJson(route('posts.index', ['search' => 'flamingo', 'load' => 'comments']))
@@ -97,18 +99,18 @@ class SearchFilterTest extends FeatureTest
         $post1 = factory(Post::class)->create(['subject' => 'foobar barbazz']);
         $user1 = factory(User::class)->create(['name' => 'Johnny Bravo']);
         $comment1 = factory(Comment::class)->create([
-            'post_id'   =>  $post1->id,
-            'user_id'   =>  $user1->id,
-            'body'      =>  'Commenting out loud',
+            'post_id' => $post1->id,
+            'user_id' => $user1->id,
+            'body'    => 'Commenting out loud',
 
         ]);
 
         $post2 = factory(Post::class)->create(['subject' => 'flamingo rock']);
         $user2 = factory(User::class)->create(['name' => 'Lucille Tan']);
         $comment2 = factory(Comment::class)->create([
-            'post_id'   =>  $post2->id,
-            'user_id'   =>  $user2->id,
-            'body'      =>  'Dont search',
+            'post_id' => $post2->id,
+            'user_id' => $user2->id,
+            'body'    => 'Dont search',
         ]);
 
         $response = $this->getJson(route('posts.index', ['search' => 'brav']))
@@ -128,47 +130,69 @@ class SearchFilterTest extends FeatureTest
             ->assertSuccessful();
 
         $response->assertJsonFragment([
-            'subject'   =>  $post1->subject,
-            'body'      =>  $post1->body,
+            'subject' => $post1->subject,
+            'body'    => $post1->body,
         ]);
 
         $response->assertJsonFragment([
-            'subject'   =>  $post2->subject,
-            'body'      =>  $post2->body,
+            'subject' => $post2->subject,
+            'body'    => $post2->body,
         ]);
 
         $response->assertJsonMissing([
-            'subject'   =>  $post3->subject,
-            'body'      =>  $post3->body,
+            'subject' => $post3->subject,
+            'body'    => $post3->body,
         ]);
     }
 
     /** @test */
     public function it_can_search_with_multiple_words_through_relationship()
     {
+        $this->withoutExceptionHandling();
+
         $post1 = factory(Post::class)->create(['subject' => 'foobar barbazz']);
         $comment1 = factory(Comment::class)->create([
-            'post_id'   =>  $post1->id,
-            'body'      =>  'Commenting out loud',
+            'post_id' => $post1->id,
+            'body'    => 'Commenting out loud',
         ]);
 
         $post2 = factory(Post::class)->create();
         $comment2 = factory(Comment::class)->create([
-            'post_id'   =>  $post2->id,
-            'body'      =>  'Dont search',
+            'post_id' => $post2->id,
+            'body'    => 'Dont search',
         ]);
 
         $response = $this->getJson(route('posts.index', ['search' => 'loud out commenting']))
             ->assertSuccessful();
 
         $response->assertJsonFragment([
-            'subject'   =>  $post1->subject,
-            'body'      =>  $post1->body,
+            'subject' => $post1->subject,
+            'body'    => $post1->body,
         ]);
 
         $response->assertJsonMissing([
-            'subject'   =>  $post2->subject,
-            'body'      =>  $post2->body,
+            'subject' => $post2->subject,
+            'body'    => $post2->body,
         ]);
+    }
+
+    /** @test */
+    public function it_can_search_through_polymorphic_relation()
+    {
+        $this->withoutExceptionHandling();
+
+        $satire = factory(Satire::class)->create(['subject' => 'satire']);
+        $comedy = factory(Comedy::class)->create(['subject' => 'comedy']);
+
+        $post1 = factory(Post::class)->create(['category_type' => $satire->getMorphClass(), 'category_id' => $satire->id]);
+        $post2 = factory(Post::class)->create(['category_type' => $comedy->getMorphClass(), 'category_id' => $comedy->id]);
+        $post3 = factory(Post::class)->create(['category_type' => null, 'category_id' => null]);
+
+        $response = $this->getJson(route('posts.index', ['search' => 'comedy']))
+            ->assertSuccessful();
+
+        $response->assertJsonMissing(['subject' => $post1->subject, 'body' => $post1->body]);
+        $response->assertJsonFragment(['subject' => $post2->subject, 'body' => $post2->body]);
+        $response->assertJsonMissing(['subject' => $post3->subject, 'body' => $post3->body]);
     }
 }

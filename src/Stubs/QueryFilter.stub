@@ -14,15 +14,6 @@ class DummyClass extends AbstractQueryFilter
     protected $loader = '';
 
     /**
-     * List of sortable columns.
-     *
-     * @var array
-     */
-    protected $sortableColumns = [
-        //
-    ];
-
-    /**
      * Columns that are searchable.
      *
      * @var array

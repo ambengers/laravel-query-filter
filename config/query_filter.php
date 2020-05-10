@@ -9,5 +9,5 @@ return [
     'filter_namespace' => 'App\Filters',
 
     // The namespace to use for query loader classes
-    'loader_namespace'  =>  'App\Loaders',
+    'loader_namespace' => 'App\Loaders',
 ];

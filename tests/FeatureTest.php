@@ -3,7 +3,7 @@
 namespace Ambengers\QueryFilter\Tests;
 
 use Orchestra\Testbench\TestCase;
-use Illuminate\Foundation\Testing\TestResponse;
+use Illuminate\Testing\TestResponse;
 
 class FeatureTest extends TestCase
 {
@@ -21,7 +21,7 @@ class FeatureTest extends TestCase
         $this->withFactories(__DIR__.'/Factories');
 
         TestResponse::macro('data', function ($key = null) {
-            if (!$key) {
+            if (! $key) {
                 return $this->original;
             }
             if ($this->original instanceof Collection) {
@@ -40,7 +40,7 @@ class FeatureTest extends TestCase
     {
         $this->loadMigrationsFrom([
             '--database' => 'sqlite',
-            '--realpath' => realpath(__DIR__.'/Migrations'),
+            '--path'     => realpath(__DIR__.'/Migrations'),
         ]);
     }
 
