@@ -3,8 +3,8 @@
 namespace Ambengers\QueryFilter\Tests;
 
 use Orchestra\Testbench\TestCase;
+use Illuminate\Testing\TestResponse;
 use Illuminate\Support\Facades\Config;
-use Illuminate\Foundation\Testing\TestResponse;
 
 class FeatureTest extends TestCase
 {
