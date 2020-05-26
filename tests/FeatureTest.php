@@ -3,7 +3,8 @@
 namespace Ambengers\QueryFilter\Tests;
 
 use Orchestra\Testbench\TestCase;
-use Illuminate\Testing\TestResponse;
+use Illuminate\Support\Facades\Config;
+use Illuminate\Foundation\Testing\TestResponse;
 
 class FeatureTest extends TestCase
 {
@@ -15,6 +16,10 @@ class FeatureTest extends TestCase
     protected function setUp() : void
     {
         parent::setUp();
+
+        Config::set('query_filter.method', 'filter');
+        Config::set('query_filter.filter_namespace', 'App\Filters');
+        Config::set('query_filter.loader_namespace', 'App\Loaders');
 
         $this->loadMigrations();
 
