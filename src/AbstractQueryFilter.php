@@ -97,7 +97,6 @@ abstract class AbstractQueryFilter extends RequestQueryBuilder
         return $builder;
     }
 
-
     /**
      * Search through related tables.
      *
