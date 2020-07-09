@@ -56,11 +56,13 @@ abstract class AbstractQueryFilter extends RequestQueryBuilder
             return $this->builder;
         }
 
-        return $this->builder->where(function ($query) use ($text) {
+        $this->builder->where(function ($query) use ($text) {
             // Since we have a search filter, let's spin
             // through our list of searchable columns
             $this->performSearch($query, $text);
         });
+
+        return $this->builder;
     }
 
     /**
@@ -70,23 +72,31 @@ abstract class AbstractQueryFilter extends RequestQueryBuilder
      * @param  string $text
      * @return void
      */
-    protected function performSearch($query, $text)
+    protected function performSearch(Builder $builder, $text)
     {
-        $searchable = explode(' ', $text);
-
-        foreach ($searchable as $word) {
-            foreach ($this->searchableColumns as $attribute => $value) {
-                // If the value is an array, that means we want to search through a relationship.
-                // We need to make sure that we send through the closure's query instance so we
-                // can have an 'AND' query with nested queries wrapped within a parenthesis.
-                is_array($value)
-                    ? $this->performRelationsSearch($query, $attribute, $value, $word)
-                    : $query->orWhere($value, 'like', "%{$word}%");
-            }
+        foreach ($this->searchableColumns as $attribute => $value) {
+            // If the value is an array, that means we want to search through a relationship.
+            // We need to make sure that we send through the closure's query instance so we
+            // can have an 'AND' query with nested queries wrapped within a parenthesis.
+            is_array($value)
+                ? $this->performRelationSearch($builder, $attribute, $value, $text)
+                : $this->performColumnSearch($builder, $value, $text);
         }
 
-        return $query;
+        return $builder;
     }
+
+    public function performColumnSearch(Builder $builder, $column, $text)
+    {
+        $builder->orWhere(function ($query) use ($column, $text) {
+            foreach (explode(' ', $text) as $word) {
+                $query->where($column, 'like', "%{$word}%");
+            }
+        });
+
+        return $builder;
+    }
+
 
     /**
      * Search through related tables.
@@ -97,7 +107,7 @@ abstract class AbstractQueryFilter extends RequestQueryBuilder
      * @param  string                               $text
      * @return Illuminate\Database\Eloquent\Builder
      */
-    protected function performRelationsSearch(Builder $builder, $related, $columns, $text)
+    protected function performRelationSearch(Builder $builder, $related, $columns, $text)
     {
         $columns = is_array($columns) ? $columns : [$columns];
 
@@ -108,8 +118,8 @@ abstract class AbstractQueryFilter extends RequestQueryBuilder
             $query->where(function ($query) use ($columns, $text) {
                 foreach ($columns as $attribute => $value) {
                     is_array($value)
-                        ? $this->performRelationsSearch($query, $attribute, $value, $text)
-                        : $query->orWhere($value, 'like', "%{$text}%");
+                        ? $this->performRelationSearch($query, $attribute, $value, $text)
+                        : $this->performColumnSearch($query, $value, $text);
                 }
             });
         };

@@ -31,14 +31,16 @@ class PostMethodBasedFilters extends AbstractQueryFilter implements PostFilterIn
      * @param  string $id
      * @return Illuminate\Database\Eloquent\Builder
      */
-    public function comments($id = '')
+    public function comments($id = null)
     {
-        if (! $id) {
+        if (! $ids = explode(',', $id)) {
             return $this->builder;
         }
 
-        return $this->builder->whereHas('comments', function ($query) use ($id) {
-            $query->whereId($id);
+        return $this->builder->where(function ($query) use ($ids) {
+            $query->whereHas('comments', function ($query) use ($ids) {
+                $query->whereIn('id', $ids);
+            });
         });
     }
 }

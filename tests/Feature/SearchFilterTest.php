@@ -122,6 +122,8 @@ class SearchFilterTest extends FeatureTest
     /** @test */
     public function it_can_search_with_multiple_words()
     {
+        $this->withoutExceptionHandling();
+
         $post1 = factory(Post::class)->create(['subject' => 'foobar barbazz']);
         $post2 = factory(Post::class)->create(['subject' => 'foobar']);
         $post3 = factory(Post::class)->create(['subject' => 'bang bang']);
@@ -134,7 +136,7 @@ class SearchFilterTest extends FeatureTest
             'body'    => $post1->body,
         ]);
 
-        $response->assertJsonFragment([
+        $response->assertJsonMissing([
             'subject' => $post2->subject,
             'body'    => $post2->body,
         ]);
@@ -151,18 +153,18 @@ class SearchFilterTest extends FeatureTest
         $this->withoutExceptionHandling();
 
         $post1 = factory(Post::class)->create(['subject' => 'foobar barbazz']);
-        $comment1 = factory(Comment::class)->create([
-            'post_id' => $post1->id,
-            'body'    => 'Commenting out loud',
-        ]);
+        $comment1 = factory(Comment::class)->create(['post_id' => $post1->id, 'body' => 'Value searchable totally']);
 
         $post2 = factory(Post::class)->create();
-        $comment2 = factory(Comment::class)->create([
-            'post_id' => $post2->id,
-            'body'    => 'Dont search',
-        ]);
+        $comment2 = factory(Comment::class)->create(['post_id' => $post2->id, 'body' => 'Dont search']);
 
-        $response = $this->getJson(route('posts.index', ['search' => 'loud out commenting']))
+        $post3 = factory(Post::class)->create(['body' => 'Totally value']);
+        $comment3 = factory(Comment::class)->create(['post_id' => $post3->id, 'body' => 'Not going to appear in search']);
+
+        $post4 = factory(Post::class)->create(['body' => 'Searchable value, totally']);
+        $comment4 = factory(Comment::class)->create(['post_id' => $post4->id]);
+
+        $response = $this->getJson(route('posts.index', ['search' => 'Totally searchable value']))
             ->assertSuccessful();
 
         $response->assertJsonFragment([
@@ -173,6 +175,16 @@ class SearchFilterTest extends FeatureTest
         $response->assertJsonMissing([
             'subject' => $post2->subject,
             'body'    => $post2->body,
+        ]);
+
+        $response->assertJsonMissing([
+            'subject' => $post3->subject,
+            'body'    => $post3->body,
+        ]);
+
+        $response->assertJsonFragment([
+            'subject' => $post4->subject,
+            'body'    => $post4->body,
         ]);
     }
 
