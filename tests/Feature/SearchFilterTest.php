@@ -207,4 +207,19 @@ class SearchFilterTest extends FeatureTest
         $response->assertJsonFragment(['subject' => $post2->subject, 'body' => $post2->body]);
         $response->assertJsonMissing(['subject' => $post3->subject, 'body' => $post3->body]);
     }
+
+    /** @test */
+    public function search_parameters_can_be_set_during_runtime()
+    {
+        $post1 = factory(Post::class)->create(['subject' => 'Satirical post']);
+        $post2 = factory(Post::class)->create(['subject' => 'Some other post']);
+
+        $filters = app(PostMethodBasedFilters::class)->parameters(['search' => 'sat']);
+
+        $posts = Post::filter($filters);
+
+        $this->setResponseContent($posts)
+            ->assertJsonFragment(['subject' => $post1->subject])
+            ->assertJsonMissing(['subject' => $post2->subject]);
+    }
 }

@@ -2,6 +2,7 @@
 
 namespace Ambengers\QueryFilter\Tests;
 
+use Illuminate\Http\Response;
 use Orchestra\Testbench\TestCase;
 use Illuminate\Testing\TestResponse;
 use Illuminate\Support\Facades\Config;
@@ -78,5 +79,17 @@ class FeatureTest extends TestCase
             'database' => ':memory:',
             'prefix'   => '',
         ]);
+    }
+
+    /**
+     * Set the data to the response object as content
+     *
+     * @param mixed $data
+     */
+    public function setResponseContent($data)
+    {
+        return TestResponse::fromBaseResponse(
+            app(Response::class)->setContent($data)
+        );
     }
 }

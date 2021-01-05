@@ -10,7 +10,7 @@ use Illuminate\Support\Str;
 
 abstract class RequestQueryBuilder
 {
-    use Concerns\InteractsWithRequest;
+    use Concerns\HasParameters;
 
     /**
      * Query builder instance.
@@ -54,7 +54,7 @@ abstract class RequestQueryBuilder
     {
         $this->builder = $builder;
 
-        foreach ($this->all() as $key => $value) {
+        foreach ($this->getParameters() as $key => $value) {
             $key = Str::camel($key);
 
             $this->filters = $this->camelKeys($this->filters)->toArray();
