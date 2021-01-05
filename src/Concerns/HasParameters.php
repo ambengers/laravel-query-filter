@@ -14,7 +14,7 @@ trait HasParameters
     protected $request;
 
     /**
-     * Array of parameters
+     * Array of parameters.
      *
      * @var array|null
      */
