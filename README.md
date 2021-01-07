@@ -258,5 +258,19 @@ return [
 ]
 ```
 
+## With [Laravel Livewire](https://github.com/livewire/livewire)
+Livewire follows its own structure when sending requests to the backend. This makes it impossible for query-filter package to automatically read parameters from the request query string. <br><br>
+However, you can still manually assign parameters during runtime by resolving your query filter class from the container and call the `parameter` method, like so.
+```php
+
+public function render () {
+    $filters = app(PostFilter::class)->parameters(['search' => 'foo']);
+
+    $posts = Post::filter($filters);
+
+    return view('livewire.posts.index', ['posts' => $posts]);
+}
+```
+
 ## Similar Packages
 [cerbero90/query-filters](https://github.com/cerbero90/query-filters)
