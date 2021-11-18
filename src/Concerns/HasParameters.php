@@ -23,7 +23,7 @@ trait HasParameters
     /**
      * Set the parameters.
      *
-     * @param  array|null $parameters
+     * @param  array|null  $parameters
      * @return static
      */
     public function parameters(array $parameters = null)
@@ -72,7 +72,7 @@ trait HasParameters
     /**
      * Check if a key is filled with value in parameters.
      *
-     * @param  string $key
+     * @param  string  $key
      * @return bool
      */
     public function filled($key)
@@ -91,8 +91,8 @@ trait HasParameters
     /**
      * Retrieve a value from parameters.
      *
-     * @param  string $key
-     * @param  string|null $default
+     * @param  string  $key
+     * @param  string|null  $default
      * @return mixed
      */
     public function input($key, $default = null)
