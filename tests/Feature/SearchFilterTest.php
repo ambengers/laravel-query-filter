@@ -1,14 +1,19 @@
 <?php
+
 namespace Ambengers\QueryFilter\Tests\Feature;
 
 use Ambengers\QueryFilter\Tests\FeatureTest;
-use Ambengers\QueryFilter\Tests\Models\Post;
-use Ambengers\QueryFilter\Tests\Models\User;
-use Ambengers\QueryFilter\Tests\Models\Comedy;
-use Ambengers\QueryFilter\Tests\Models\Satire;
-use Ambengers\QueryFilter\Tests\Models\Comment;
 use Ambengers\QueryFilter\Tests\Filters\PostFilterInterface;
 use Ambengers\QueryFilter\Tests\Filters\PostMethodBasedFilters;
+use Ambengers\QueryFilter\Tests\Filters\ProjectFilters;
+use Ambengers\QueryFilter\Tests\Models\Comedy;
+use Ambengers\QueryFilter\Tests\Models\Comment;
+use Ambengers\QueryFilter\Tests\Models\Deployment;
+use Ambengers\QueryFilter\Tests\Models\Environment;
+use Ambengers\QueryFilter\Tests\Models\Post;
+use Ambengers\QueryFilter\Tests\Models\Project;
+use Ambengers\QueryFilter\Tests\Models\Satire;
+use Ambengers\QueryFilter\Tests\Models\User;
 
 class SearchFilterTest extends FeatureTest
 {
@@ -34,12 +39,12 @@ class SearchFilterTest extends FeatureTest
 
         $response->assertJsonFragment([
             'subject' => $post1->subject,
-            'body'    => $post1->body,
+            'body' => $post1->body,
         ]);
 
         $response->assertJsonMissing([
             'subject' => $post2->subject,
-            'body'    => $post2->body,
+            'body' => $post2->body,
         ]);
     }
 
@@ -49,13 +54,13 @@ class SearchFilterTest extends FeatureTest
         $post1 = factory(Post::class)->create(['subject' => 'foobar barbazz']);
         $comment1 = factory(Comment::class)->create([
             'post_id' => $post1->id,
-            'body'    => 'Commenting out loud',
+            'body' => 'Commenting out loud',
         ]);
 
         $post2 = factory(Post::class)->create();
         $comment2 = factory(Comment::class)->create([
             'post_id' => $post2->id,
-            'body'    => 'Dont search',
+            'body' => 'Dont search',
         ]);
 
         $response = $this->getJson(route('posts.index', ['search' => 'Commenting']))
@@ -63,12 +68,12 @@ class SearchFilterTest extends FeatureTest
 
         $response->assertJsonFragment([
             'subject' => $post1->subject,
-            'body'    => $post1->body,
+            'body' => $post1->body,
         ]);
 
         $response->assertJsonMissing([
             'subject' => $post2->subject,
-            'body'    => $post2->body,
+            'body' => $post2->body,
         ]);
     }
 
@@ -78,13 +83,13 @@ class SearchFilterTest extends FeatureTest
         $post1 = factory(Post::class)->create(['subject' => 'foobar barbazz']);
         $comment1 = factory(Comment::class)->create([
             'post_id' => $post1->id,
-            'body'    => 'Commenting out loud',
+            'body' => 'Commenting out loud',
         ]);
 
         $post2 = factory(Post::class)->create(['subject' => 'flamingo rock']);
         $comment2 = factory(Comment::class)->create([
             'post_id' => $post2->id,
-            'body'    => 'Dont search',
+            'body' => 'Dont search',
         ]);
 
         $response = $this->getJson(route('posts.index', ['search' => 'flamingo', 'load' => 'comments']))
@@ -101,7 +106,7 @@ class SearchFilterTest extends FeatureTest
         $comment1 = factory(Comment::class)->create([
             'post_id' => $post1->id,
             'user_id' => $user1->id,
-            'body'    => 'Commenting out loud',
+            'body' => 'Commenting out loud',
 
         ]);
 
@@ -110,7 +115,7 @@ class SearchFilterTest extends FeatureTest
         $comment2 = factory(Comment::class)->create([
             'post_id' => $post2->id,
             'user_id' => $user2->id,
-            'body'    => 'Dont search',
+            'body' => 'Dont search',
         ]);
 
         $response = $this->getJson(route('posts.index', ['search' => 'brav']))
@@ -133,17 +138,17 @@ class SearchFilterTest extends FeatureTest
 
         $response->assertJsonFragment([
             'subject' => $post1->subject,
-            'body'    => $post1->body,
+            'body' => $post1->body,
         ]);
 
         $response->assertJsonMissing([
             'subject' => $post2->subject,
-            'body'    => $post2->body,
+            'body' => $post2->body,
         ]);
 
         $response->assertJsonMissing([
             'subject' => $post3->subject,
-            'body'    => $post3->body,
+            'body' => $post3->body,
         ]);
     }
 
@@ -169,22 +174,22 @@ class SearchFilterTest extends FeatureTest
 
         $response->assertJsonFragment([
             'subject' => $post1->subject,
-            'body'    => $post1->body,
+            'body' => $post1->body,
         ]);
 
         $response->assertJsonMissing([
             'subject' => $post2->subject,
-            'body'    => $post2->body,
+            'body' => $post2->body,
         ]);
 
         $response->assertJsonMissing([
             'subject' => $post3->subject,
-            'body'    => $post3->body,
+            'body' => $post3->body,
         ]);
 
         $response->assertJsonFragment([
             'subject' => $post4->subject,
-            'body'    => $post4->body,
+            'body' => $post4->body,
         ]);
     }
 
@@ -221,5 +226,30 @@ class SearchFilterTest extends FeatureTest
         $this->setResponseContent($posts)
             ->assertJsonFragment(['subject' => $post1->subject])
             ->assertJsonMissing(['subject' => $post2->subject]);
+    }
+
+    /** @test */
+    public function can_search_using_has_many_through()
+    {
+        $proj1 = factory(Project::class)->create();
+        $proj2 = factory(Project::class)->create();
+
+        $env1 = factory(Environment::class)->create(['project_id' => $proj1->id]);
+        $env2 = factory(Environment::class)->create(['project_id' => $proj1->id]);
+        $env3 = factory(Environment::class)->create(['project_id' => $proj2->id]);
+        $env4 = factory(Environment::class)->create(['project_id' => $proj2->id]);
+
+        $d1 = factory(Deployment::class)->create(['environment_id' => $env3->id]);
+        $d2 = factory(Deployment::class)->create(['environment_id' => $env3->id]);
+        $d3 = factory(Deployment::class)->create(['environment_id' => $env4->id]);
+        $d4 = factory(Deployment::class)->create(['environment_id' => $env4->id]);
+
+        $filters = app(ProjectFilters::class)->parameters(['search' => $d3->commit_hash]);
+
+        $projects = Project::filter($filters);
+
+        $this->setResponseContent($projects)
+            ->assertJsonFragment(['name' => $proj2->name])
+            ->assertJsonMissing(['name' => $proj1->name]);
     }
 }

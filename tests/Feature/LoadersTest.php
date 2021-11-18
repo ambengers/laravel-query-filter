@@ -3,10 +3,14 @@
 namespace Ambengers\QueryFilter\Tests\Feature;
 
 use Ambengers\QueryFilter\Tests\FeatureTest;
-use Ambengers\QueryFilter\Tests\Models\Post;
-use Ambengers\QueryFilter\Tests\Models\Comment;
 use Ambengers\QueryFilter\Tests\Filters\PostFilterInterface;
 use Ambengers\QueryFilter\Tests\Filters\PostMethodBasedFilters;
+use Ambengers\QueryFilter\Tests\Filters\ProjectFilters;
+use Ambengers\QueryFilter\Tests\Models\Comment;
+use Ambengers\QueryFilter\Tests\Models\Deployment;
+use Ambengers\QueryFilter\Tests\Models\Environment;
+use Ambengers\QueryFilter\Tests\Models\Post;
+use Ambengers\QueryFilter\Tests\Models\Project;
 
 class LoadersTest extends FeatureTest
 {
@@ -66,13 +70,13 @@ class LoadersTest extends FeatureTest
         $post1 = factory(Post::class)->create(['subject' => 'foobar barbazz']);
         $comment1 = factory(Comment::class)->create([
             'post_id' => $post1->id,
-            'body'    => 'Commenting out loud',
+            'body' => 'Commenting out loud',
         ]);
 
         $post2 = factory(Post::class)->create(['subject' => 'flamingo rock']);
         $comment2 = factory(Comment::class)->create([
             'post_id' => $post2->id,
-            'body'    => 'Dont search',
+            'body' => 'Dont search',
         ]);
 
         $response = $this->getJson(route('posts.index', ['page' => 1, 'per_page' => 1, 'load' => 'comments']))
@@ -99,12 +103,12 @@ class LoadersTest extends FeatureTest
 
         $comment1 = factory(Comment::class)->create([
             'post_id' => $post->id,
-            'body'    => 'Commenting out loud',
+            'body' => 'Commenting out loud',
         ]);
 
         $comment2 = factory(Comment::class)->create([
-            'post_id'    => $post->id,
-            'body'       => 'I have been deleted!',
+            'post_id' => $post->id,
+            'body' => 'I have been deleted!',
             'deleted_at' => now(),
         ]);
 
@@ -125,18 +129,18 @@ class LoadersTest extends FeatureTest
 
         $comment1 = factory(Comment::class)->create([
             'post_id' => $post->id,
-            'body'    => 'Commenting out loud',
+            'body' => 'Commenting out loud',
         ]);
 
         $comment2 = factory(Comment::class)->create([
-            'post_id'    => $post->id,
-            'body'       => 'I have been deleted!',
+            'post_id' => $post->id,
+            'body' => 'I have been deleted!',
             'deleted_at' => now(),
         ]);
 
         $comment3 = factory(Comment::class)->create([
-            'post_id'     => $post->id,
-            'body'        => 'I am not approved!',
+            'post_id' => $post->id,
+            'body' => 'I am not approved!',
             'approved_at' => null,
         ]);
 
@@ -159,5 +163,32 @@ class LoadersTest extends FeatureTest
         ->assertJsonMissing(['body' => $comment1->body])
         ->assertJsonFragment(['body' => $comment2->body])
         ->assertJsonMissing(['body' => $comment3->body]);
+    }
+
+    /** @test */
+    public function can_load_has_many_through()
+    {
+        $proj1 = factory(Project::class)->create();
+        $proj2 = factory(Project::class)->create();
+
+        $env1 = factory(Environment::class)->create(['project_id' => $proj1->id]);
+        $env2 = factory(Environment::class)->create(['project_id' => $proj1->id]);
+        $env3 = factory(Environment::class)->create(['project_id' => $proj2->id]);
+        $env4 = factory(Environment::class)->create(['project_id' => $proj2->id]);
+
+        $d1 = factory(Deployment::class)->create(['environment_id' => $env1->id]);
+        $d2 = factory(Deployment::class)->create(['environment_id' => $env1->id]);
+        $d3 = factory(Deployment::class)->create(['environment_id' => $env4->id]);
+        $d4 = factory(Deployment::class)->create(['environment_id' => $env4->id]);
+
+        $filters = app(ProjectFilters::class)->parameters(['load' => 'deployments']);
+
+        $projects = Project::filter($filters);
+
+        $this->setResponseContent($projects)
+            ->assertJsonFragment(['id' => $d1->id, 'commit_hash' => $d1->commit_hash])
+            ->assertJsonFragment(['id' => $d2->id, 'commit_hash' => $d2->commit_hash])
+            ->assertJsonFragment(['id' => $d3->id, 'commit_hash' => $d3->commit_hash])
+            ->assertJsonFragment(['id' => $d4->id, 'commit_hash' => $d4->commit_hash]);
     }
 }
