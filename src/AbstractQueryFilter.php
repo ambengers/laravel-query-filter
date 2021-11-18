@@ -14,7 +14,7 @@ abstract class AbstractQueryFilter extends RequestQueryBuilder
     /**
      * Perform a lazy/eager load from query string.
      *
-     * @param  string $relations
+     * @param  string  $relations
      * @return Illuminate\Database\Eloquent\Builder
      */
     public function load($relations = null)
@@ -47,7 +47,7 @@ abstract class AbstractQueryFilter extends RequestQueryBuilder
     /**
      * Perform a search from query string.
      *
-     * @param  string $text
+     * @param  string  $text
      * @return Illuminate\Database\Eloquent\Builder
      */
     public function search($text = null)
@@ -68,8 +68,8 @@ abstract class AbstractQueryFilter extends RequestQueryBuilder
     /**
      * Iterate through searchable columns.
      *
-     * @param  Illuminate\Database\Eloquent\Builder $query
-     * @param  string $text
+     * @param  Illuminate\Database\Eloquent\Builder  $query
+     * @param  string  $text
      * @return void
      */
     protected function performSearch(Builder $builder, $text)
@@ -100,10 +100,10 @@ abstract class AbstractQueryFilter extends RequestQueryBuilder
     /**
      * Search through related tables.
      *
-     * @param  Illuminate\Database\Eloquent\Builder $builder
-     * @param  string                               $related
-     * @param  array|string                         $columns
-     * @param  string                               $text
+     * @param  Illuminate\Database\Eloquent\Builder  $builder
+     * @param  string  $related
+     * @param  array|string  $columns
+     * @param  string  $text
      * @return Illuminate\Database\Eloquent\Builder
      */
     protected function performRelationSearch(Builder $builder, $related, $columns, $text)
@@ -131,8 +131,8 @@ abstract class AbstractQueryFilter extends RequestQueryBuilder
     /**
      * Sort a filtered result.
      *
-     * @param  Illuminate\Support\Collection        $collection
-     * @param  AbstractQueryFilter                  $filter
+     * @param  Illuminate\Support\Collection  $collection
+     * @param  AbstractQueryFilter  $filter
      * @return Illuminate\Support\Collection
      */
     protected function sortCollection(Collection $collection)
@@ -149,7 +149,7 @@ abstract class AbstractQueryFilter extends RequestQueryBuilder
     /**
      * Get the paginated results after applying the filters.
      *
-     * @param  Builder $builder
+     * @param  Builder  $builder
      * @return Illuminate\Support\Collection
      */
     public function getPaginated(Builder $builder)
@@ -166,7 +166,7 @@ abstract class AbstractQueryFilter extends RequestQueryBuilder
     /**
      * Get the paginated results after applying the filters.
      *
-     * @param  Illuminate\Database\Eloquent\Builder $builder
+     * @param  Illuminate\Database\Eloquent\Builder  $builder
      * @return Illuminate\Support\Collection
      */
     public function paginate($items, $perPage = 15, $page = null, $options = [])

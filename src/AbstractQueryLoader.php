@@ -17,7 +17,7 @@ abstract class AbstractQueryLoader extends RequestQueryBuilder
     /**
      * Set the builder instance.
      *
-     * @param Illuminate\Database\Eloquent\Builder $builder
+     * @param  Illuminate\Database\Eloquent\Builder  $builder
      */
     public function setEloquentBuilder(Builder $builder)
     {
@@ -29,8 +29,8 @@ abstract class AbstractQueryLoader extends RequestQueryBuilder
     /**
      * Load relations based on the given query parameters.
      *
-     * @param  Illuminate\Database\Eloquent\Builder $builder
-     * @param  string $relations
+     * @param  Illuminate\Database\Eloquent\Builder  $builder
+     * @param  string  $relations
      * @return Illuminate\Database\Eloquent\Builder
      */
     public function load($relations = '')

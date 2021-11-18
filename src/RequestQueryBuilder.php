@@ -36,8 +36,8 @@ abstract class RequestQueryBuilder
     /**
      * Construct the object.
      *
-     * @param Request $request
-     * @return  void
+     * @param  Request  $request
+     * @return void
      */
     public function __construct(Request $request)
     {
@@ -47,7 +47,7 @@ abstract class RequestQueryBuilder
     /**
      * Apply the filters to the query.
      *
-     * @param  Illuminate\Database\Query\Builder $builder
+     * @param  Illuminate\Database\Query\Builder  $builder
      * @return Illuminate\Database\Query\Builder $builder
      */
     public function apply(Builder $builder)
@@ -72,8 +72,8 @@ abstract class RequestQueryBuilder
     /**
      * Call the invokable object of the filter.
      *
-     * @param  string $key
-     * @param  string $value
+     * @param  string  $key
+     * @param  string  $value
      * @return void
      */
     protected function objectBasedFilter($key, $value)
@@ -90,8 +90,8 @@ abstract class RequestQueryBuilder
     /**
      * Call method of the filter.
      *
-     * @param  string $key
-     * @param  string $value
+     * @param  string  $key
+     * @param  string  $value
      * @return void
      */
     protected function methodBasedFilter($key, $value)
@@ -102,7 +102,7 @@ abstract class RequestQueryBuilder
     /**
      * Get the collection results after applying the filters.
      *
-     * @param  Builder $builder
+     * @param  Builder  $builder
      * @return Illuminate\Support\Collection
      */
     public function getFilteredModelCollection(Builder $builder)
