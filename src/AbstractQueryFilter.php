@@ -89,7 +89,7 @@ abstract class AbstractQueryFilter extends RequestQueryBuilder
     /**
      * Perform search on a column.
      *
-     * @param  Illuminate\Database\Eloquent\Builder $builder
+     * @param  Illuminate\Database\Eloquent\Builder  $builder
      * @param  string  $column
      * @param  string  $text
      * @return Illuminate\Database\Eloquent\Builder
