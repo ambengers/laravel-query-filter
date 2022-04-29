@@ -86,7 +86,15 @@ abstract class AbstractQueryFilter extends RequestQueryBuilder
         return $builder;
     }
 
-    public function performColumnSearch(Builder $builder, $column, $text)
+    /**
+     * Perform search on a column.
+     *
+     * @param  Illuminate\Database\Eloquent\Builder $builder
+     * @param  string  $column
+     * @param  string  $text
+     * @return Illuminate\Database\Eloquent\Builder
+     */
+    protected function performColumnSearch(Builder $builder, $column, $text)
     {
         $builder->orWhere(function ($query) use ($column, $text) {
             foreach (explode(' ', $text) as $word) {
