@@ -31,7 +31,7 @@ The config file contains the configuration for the namespace and path of the fil
 
 ## Method-based Filters
 
-Then you can make a filter class using the `make:query-filter` command.
+You can generate a filter class using the `make:query-filter` command.
 
 ```php
 php artisan make:query-filter PostFilter
