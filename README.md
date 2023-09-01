@@ -130,7 +130,7 @@ class Published
 
 ## Sorting
 
-This package offers sorting by default, following `field|direction` syntax, like so.
+This package also allows you to sort your models by following `field|direction` syntax, like so.
 
 ```php
 /** Sorting */
@@ -139,7 +139,7 @@ This package offers sorting by default, following `field|direction` syntax, like
 
 ## Pagination
 
-This package offers pagination by default.
+This package also allows you to paginate your models like so.
 
 ```php
 /** Pagination */
@@ -157,7 +157,7 @@ Note: If pagination keys are not present on the request query string, it will re
 
 ## Search
 
-This package allows you to define the columns that are searchable. By default, when you generate a filter class with `make:query-filter` command,
+This package also allows you to define the columns that are searchable. By default, when you generate a filter class with `make:query-filter` command,
 the class will contain a `$searchableColumns` array. Then, list the searchable columns of your model in this array.
 
 ```php
