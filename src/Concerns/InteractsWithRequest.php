@@ -35,7 +35,7 @@ trait InteractsWithRequest
     /**
      * Check if a key is filled with value in request.
      *
-     * @param  string $key
+     * @param  string  $key
      * @return bool
      */
     public function filled($key)
@@ -46,8 +46,8 @@ trait InteractsWithRequest
     /**
      * Retrieve a value from request.
      *
-     * @param  string $key
-     * @param  string|null $default
+     * @param  string  $key
+     * @param  string|null  $default
      * @return mixed
      */
     public function input($key, $default = null)
