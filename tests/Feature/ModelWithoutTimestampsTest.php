@@ -23,4 +23,19 @@ class ModelWithoutTimestampsTest extends FeatureTest
         $this->assertTrue($results->first()['id'] === $model1->id);
         $this->assertTrue($results->last()['id'] === $model2->id);
     }
+
+    /** @test */
+    public function models_without_timestamps_are_searchable()
+    {
+        $this->withoutExceptionHandling();
+
+        $model1 = factory(ModelWithoutTimestamp::class)->create(['name' => 'This model is searchable!']);
+        $model2 = factory(ModelWithoutTimestamp::class)->create(['name' => 'foo']);
+
+        $response = $this->getJson(route('model-without-timestamps.index', ['search' => 'searchable']))
+            ->assertSuccessful();
+
+        $response->assertJsonFragment(['id' => $model1->getKey(), 'name' => $model1->name]);
+        $response->assertJsonMissing(['id' => $model2->getKey(), 'name' => $model2->name]);
+    }
 }
