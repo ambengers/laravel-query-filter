@@ -20,14 +20,4 @@ class CreateDeploymentsTable extends Migration
             $table->timestamps();
         });
     }
-
-    /**
-     * Reverse the migrations.
-     *
-     * @return void
-     */
-    public function down()
-    {
-        Schema::dropIfExists('comments');
-    }
 }

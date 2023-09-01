@@ -2,18 +2,18 @@
 
 namespace Ambengers\QueryFilter\Tests\Feature;
 
-use Illuminate\Http\Request;
-use Illuminate\Http\Response;
-use Illuminate\Testing\TestResponse;
-use Illuminate\Support\Facades\Config;
-use Illuminate\Database\Eloquent\Builder;
-use Ambengers\QueryFilter\Tests\FeatureTest;
-use Ambengers\QueryFilter\Tests\Models\Post;
 use Ambengers\QueryFilter\AbstractQueryLoader;
 use Ambengers\QueryFilter\RequestQueryBuilder;
+use Ambengers\QueryFilter\Tests\FeatureTest;
 use Ambengers\QueryFilter\Tests\Filters\PostMethodBasedFilters;
+use Ambengers\QueryFilter\Tests\Models\Post;
+use Illuminate\Database\Eloquent\Builder;
+use Illuminate\Http\Request;
+use Illuminate\Http\Response;
+use Illuminate\Support\Facades\Config;
+use Illuminate\Testing\TestResponse;
 
-class MethodSubstitutionTest extends FeatureTest
+class FilterMethodCustomizationTest extends FeatureTest
 {
     /** @test */
     public function can_customize_filter_method_name()

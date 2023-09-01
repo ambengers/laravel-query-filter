@@ -4,7 +4,7 @@ use Illuminate\Support\Facades\Schema;
 use Illuminate\Database\Schema\Blueprint;
 use Illuminate\Database\Migrations\Migration;
 
-class CreateEnvironmentsTable extends Migration
+class CreateModelWithoutTimestampsTable extends Migration
 {
     /**
      * Run the migrations.
@@ -13,11 +13,9 @@ class CreateEnvironmentsTable extends Migration
      */
     public function up()
     {
-        Schema::create('environments', function (Blueprint $table) {
+        Schema::create('model_without_timestamps', function (Blueprint $table) {
             $table->increments('id');
-            $table->bigInteger('project_id');
             $table->string('name');
-            $table->timestamps();
         });
     }
 }
