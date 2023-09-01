@@ -6,11 +6,6 @@ use Illuminate\Database\Eloquent\Model;
 
 class Post extends Model
 {
-    /**
-     * The attributes that are guarded.
-     *
-     * @var array
-     */
     protected $guarded = [];
 
     /**

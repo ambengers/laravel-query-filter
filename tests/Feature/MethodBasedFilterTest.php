@@ -3,10 +3,10 @@
 namespace Ambengers\QueryFilter\Tests\Feature;
 
 use Ambengers\QueryFilter\Tests\FeatureTest;
-use Ambengers\QueryFilter\Tests\Models\Post;
-use Ambengers\QueryFilter\Tests\Models\Comment;
 use Ambengers\QueryFilter\Tests\Filters\PostFilterInterface;
 use Ambengers\QueryFilter\Tests\Filters\PostMethodBasedFilters;
+use Ambengers\QueryFilter\Tests\Models\Comment;
+use Ambengers\QueryFilter\Tests\Models\Post;
 
 class MethodBasedFilterTest extends FeatureTest
 {
@@ -14,7 +14,7 @@ class MethodBasedFilterTest extends FeatureTest
     {
         parent::setUp();
 
-        app()->bind(PostFilterInterface::class, function ($app) {
+        app()->bind(PostFilterInterface::class, function () {
             return new PostMethodBasedFilters(request());
         });
     }
